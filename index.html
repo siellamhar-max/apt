@@ -136,7 +136,7 @@
             width: 100%; 
             max-width: 960px; 
             display: flex;
-            justify-content: flex-end; /* FIX: Align buttons to the right corner */
+            justify-content: flex-end; /* FIX: Align buttons to the right corner (Groups back and next) */
             gap: 10px; /* Space between back and next buttons */
             padding: 10px 0;
             flex-shrink: 0; 
@@ -162,11 +162,18 @@
         #home .nav-button-next:hover { background: #b11ab6; transform: translateY(-2px); opacity: 1; }
         
         /* Hide the back button on the first page - This override must remain */
-        #home .nav-button-container { justify-content: flex-end; } 
         #home .nav-button-container .nav-button-back { display: none; }
-        
-        /* Specific alignment for batchmates page (only back button) - REMOVED, global flex-end handles it */
 
+        /* --- Batchmates Page Specific Button Visibility FIX --- */
+        /* Hide h1, but ensure the button container is visible for the back button */
+        #batchmates h1 {
+            display: none; 
+        }
+        #batchmates .nav-button-container {
+             display: flex; /* FIX: Override default hidden behavior to show back button */
+             justify-content: flex-end; /* Ensures button is in the corner */
+        }
+        
         /* ================================================= */
         /* === 3. LOADER & ANIMATIONS === */
         /* ================================================= */
@@ -426,11 +433,14 @@
         }
         
         /* Hide page elements to focus on the full image */
-        #batchmates h1,
-        /* KEEPING nav-button-container visible to show the back button */
-        #batchmates .nav-button-container {
-             /* Hiding h1 */
+        #batchmates h1 {
             display: none; 
+        }
+        
+        /* Ensure the button container is visible for the back button on the last page */
+        #batchmates .nav-button-container {
+             display: flex; /* FIX: Override default hidden behavior to show back button */
+             justify-content: flex-end; /* Inherited from global setting */
         }
         
         #batchmates .page-content-wrapper { 
