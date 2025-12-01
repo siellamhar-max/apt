@@ -12,7 +12,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #000; /* Solid black background in case the iframe fails entirely */
+            background: #000; 
             color: #fdfafa; 
             position: relative; 
             height: 100vh;
@@ -29,7 +29,6 @@
             height: 100vh;
             overflow: hidden;
             z-index: 0; 
-            /* Set fallback background image here, visible if the iframe fails to load */
             background-image: url('https://placehold.co/1920x1080/000000/00FF00?text=MATRIX+CODE+FALLBACK'); 
             background-size: cover;
             background-position: center;
@@ -37,21 +36,13 @@
 
         /* Styling for the YouTube Iframe */
         .video-background iframe {
-            /* Ensures the iframe always covers the viewport */
             min-width: 100vw;
             min-height: 100vh;
-            
-            /* Positioning the video to the center of the screen */
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            
-            /* Visual effect: darken and increase contrast for text readability */
-            /* BRIGHTNESS ADJUSTED HERE: 40% -> 65% */
             filter: brightness(65%) contrast(150%); 
-            
-            /* Scale the video larger than 100% to ensure no letterboxing */
             transform: scale(1.15) translate(-43.5%, -43.5%);
         }
 
@@ -71,19 +62,32 @@
             height: calc(100vh - 65px); 
             display: none; 
             margin: 0 auto; 
-            
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
             position: relative; 
             z-index: 1; 
-            
-            /* SEMI-TRANSPARENT BACKGROUND */
             background: rgba(10, 10, 10, 0.7); 
             border-radius: 0 0 10px 10px; 
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); 
             padding: 20px;
+            
+            /* Reset specific page backgrounds for most pages */
+            background-image: none;
+            background-color: rgba(10, 10, 10, 0.7);
+            background-size: initial;
+            background-position: initial;
+            background-repeat: initial;
         }
+        
+        /* Specific override for Batchmates to prevent scroll on main page content wrapper */
+        #batchmates .page-content-wrapper {
+             /* Remove scrollbar and scrolling for the wrapper */
+             overflow-y: hidden;
+             overflow-x: hidden;
+             padding-bottom: 0;
+        }
+
 
         .active { 
             display: flex; 
@@ -105,12 +109,25 @@
             width: 100%;
             padding: 10px 0;
             overflow-y: auto; 
-            overflow-x: hidden;
+            overflow-x: visible; 
             min-height: 0; 
         }
         /* Hide scrollbar for aesthetics, but allow scrolling */
         .page-content-wrapper::-webkit-scrollbar { display: none; }
         .page-content-wrapper { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* --- Generic Card Container for Horizontal Flex Layout (Used by Achievements and Family) --- */
+        .card-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap; 		
+            justify-content: center; 
+            align-items: flex-start;
+            width: 100%;
+            gap: 15px; 			
+            padding: 10px 0;
+        }
+
 
         /* ================================================= */
         /* === 2. NAVIGATION & BUTTONS === */
@@ -131,16 +148,16 @@
             border-color: #b11ab6;
         }
 
-        /* Navigation Buttons - Angular/Sharp */
+        /* Navigation Buttons - Aligned Bottom Right */
         .nav-button-container {
             width: 100%; 
             max-width: 960px; 
             display: flex;
-            justify-content: flex-end; /* FIX: Align buttons to the right corner (Groups back and next) */
-            gap: 10px; /* Space between back and next buttons */
+            justify-content: flex-end; /* Aligned to the end (right) */
             padding: 10px 0;
             flex-shrink: 0; 
             z-index: 1; 
+            gap: 15px; 
         }
         
         .nav-button {
@@ -161,21 +178,14 @@
         }
         #home .nav-button-next:hover { background: #b11ab6; transform: translateY(-2px); opacity: 1; }
         
-        /* Hide the back button on the first page - This override must remain */
-        #home .nav-button-container .nav-button-back { display: none; }
-
-        /* --- Batchmates Page Specific Button Visibility FIX --- */
-        /* Hide h1, but ensure the button container is visible for the back button */
-        #batchmates h1 {
+        /* Home Page (About Me) Logic Adjustment: */
+        #home .nav-button-container .nav-button-back { 
             display: none; 
         }
-        #batchmates .nav-button-container {
-             display: flex; /* Override default hidden behavior to show back button */
-             justify-content: flex-end; /* Ensures button is in the corner */
-        }
-        
+
+
         /* ================================================= */
-        /* === 3. LOADER & ANIMATIONS === */
+        /* === 3. LOADER & ANIMATIONS (Unchanged) === */
         /* ================================================= */
         
         /* Loader CSS */
@@ -187,12 +197,10 @@
             opacity: 1;
             transition: opacity 0.5s ease, visibility 0.5s ease;
         }
-        /* Class added by JS when loading is complete */
         #pre-load.hide {
             visibility: hidden;
             opacity: 0;
         }
-        /* Class added by JS when transition starts */
         #pre-load.show {
             visibility: visible;
             opacity: 1;
@@ -233,10 +241,10 @@
             100% { opacity: 0.7; }
         }
         @keyframes bobbing {
-          0%   { transform: translateY(0); }
-          25%  { transform: translateY(-20px); }
-          50%  { transform: translateY(0); }
-          75%  { transform: translateY(20px); }
+          0%   { transform: translateY(0); }
+          25%  { transform: translateY(-20px); }
+          50%  { transform: translateY(0); }
+          75%  { transform: translateY(20px); }
           100% { transform: translateY(0); }
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -245,304 +253,377 @@
             animation: fadeIn 0.5s ease-out, slideInUp 0.6s ease-out;
         }
 
-        /* ================================================= */
-        /* === 4. HOME PAGE LAYOUT === */
-        /* ================================================= */
+      /* ================================================= */
+      /* === 4. HOME PAGE LAYOUT === */
+      /* ================================================= */
 
-        #home { justify-content: space-between; align-items: center; padding-top: 20px; }
-        .personal-name { font-size: 30px; color: #bf02c5; margin-bottom: 20px; flex-shrink: 0; padding-top: 10px; }
-        .home-content { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 1000px; padding: 0 20px; gap: 20px; flex-grow: 1; }
-        @media (min-width: 768px) {
-            .home-content { flex-direction: row; justify-content: center; align-items: flex-start; gap: 50px; }
-        }
-        /* Profile Picture Frame & Text Bubble Styles */
-        .profile-frame { 
-            width: 280px; height: 280px; border: 3px solid #bf02c5; border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center; box-shadow: 0 0 15px #b305b9; 
-            flex-shrink: 0; overflow: hidden; position: relative; z-index: 2; 
-        }
-        .profile-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        /* Text Bubble Styling */
-        .text-bubble {
-            background: rgba(158, 0, 145, 0.9); 
-            border-radius: 15px;
-            padding: 25px; color: #ffffff; max-width: 600px; 
-            box-shadow: 0 0 20px rgba(255, 4, 255, 0.5); 
-            display: flex; flex-direction: column; flex-grow: 1; 
-            position: relative; z-index: 2;
-        }
-        .text-bubble h2 { font-size: 28px; color: #ee14bf; margin-bottom: 15px; text-align: left; }
-        .text-bubble p { font-size: 16px; color: #f0f0f0; line-height: 1.6; text-align: left; flex-grow: 1; }
+      #home { justify-content: space-between; align-items: center; padding-top: 20px; }
+      .personal-name { font-size: 30px; color: #bf02c5; margin-bottom: 20px; flex-shrink: 0; padding-top: 10px; }
+      .home-content { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 1000px; padding: 0 20px; gap: 20px; flex-grow: 1; }
+      @media (min-width: 768px) {
+          .home-content { flex-direction: row; justify-content: center; align-items: flex-start; gap: 50px; }
+      }
+      /* Profile Picture Frame & Text Bubble Styles */
+      .profile-frame { 
+          width: 280px; height: 280px; border: 3px solid #bf02c5; border-radius: 50%; 
+          display: flex; justify-content: center; align-items: center; box-shadow: 0 0 15px #b305b9; 
+          flex-shrink: 0; overflow: hidden; position: relative; z-index: 2; 
+      }
+      .profile-frame img { 
+          width: 100%; height: 100%; 
+          object-fit: cover; 
+          border-radius: 50%; 
+      }
+      /* Text Bubble Styling (No changes) */
+      .text-bubble {
+          background: rgba(158, 0, 145, 0.9); 
+          border-radius: 15px;
+          padding: 25px; color: #ffffff; max-width: 600px; 
+          box-shadow: 0 0 20px rgba(255, 4, 255, 0.5); 
+          display: flex; flex-direction: column; flex-grow: 1; 
+          position: relative; z-index: 2;
+      }
+      .text-bubble h2 { font-size: 28px; color: #ee14bf; margin-bottom: 15px; text-align: left; }
+      .text-bubble p { font-size: 16px; color: #f0f0f0; line-height: 1.6; text-align: left; flex-grow: 1; }
 
 
-        /* ================================================= */
-        /* === 5. CARD LAYOUTS (Education/Achievements/Family) === */
-        /* ================================================= */
+      /* ================================================= */
+      /* === 5. EDUCATION CARD LAYOUT === */
+      /* ================================================= */
 
-        .card-container {
-            display: flex; flex-direction: row; flex-wrap: wrap; 
-            gap: 10px 1%; 
-            flex-grow: 0; 
-            width: 95%; max-width: 1200px; 
-            justify-content: center;
-            align-content: flex-start; 
-            padding-bottom: 5px; 
+      /* Education Card Container for Horizontal Wrapping */
+      .edu-card-container {
+          display: flex; 		
+          flex-direction: row;	
+          flex-wrap: wrap; 		
+          justify-content: center; 
+          align-items: flex-start;	
+          width: 100%; 			
+          gap: 15px; 			
+          padding: 10px 0;
+      }
+
+      .edu-card-item {
+          /* Fixed Size */
+          width: 200px; 			
+          height: 420px; 		
+          flex-shrink: 0; 		
+
+          /* APPEARANCE */
+          background-color: rgba(0, 0, 0, 0.4); 
+          border-radius: 1rem;
+          border: 1px solid rgba(255, 255, 255, 0.2); 
+          box-shadow: 0 0 15px rgba(0, 255, 255, 0.3); 
+          padding: 1.5rem; 
+          
+          /* LAYOUT */
+          display: flex;
+          flex-direction: column; 
+          align-items: center; 	
+          text-align: center;
+          
+          /* TRANSITION */
+          transition: transform 300ms, box-shadow 300ms;
+      }
+      
+      .edu-card-item:hover {
+          transform: scale(1.05);
+          box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+      }
+
+      /* Circular Logo Placeholder */
+      .logo-frame-edu {
+          width: 60px; height: 60px; 
+          border: 2px solid #00FFFF; 
+          border-radius: 50%; 
+          display: flex; justify-content: center; align-items: center;
+          color: #333333; font-size: 10px;
+          background: #dddddd;
+          flex-shrink: 0;
+          margin-top: 5px;
+          margin-bottom: 10px;
+          overflow: hidden;
+          box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+      }
+      .logo-frame-edu img {
+          width: 100%; height: 100%;
+          object-fit: cover;
+          border-radius: 50%;
+      }
+      .edu-details {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding-top: 0;
+      }
+      .edu-level { font-weight: 700; color: #00FFFF; font-size: 1.0rem; margin-bottom: 5px; } 
+      .edu-name { font-size: 0.85rem; color: #b0b0b0; line-height: 1.3; } 
+      .edu-year, .edu-track { font-size: 0.75rem; color: #707070; line-height: 1.2; } 
+
+
+      /* --- IMAGE PLACEHOLDER STYLES --- */
+      .school-image-placeholder {
+          flex-grow: 1; 
+          display: flex; 
+          justify-content: center; 
+          align-items: flex-end; 	
+          width: 100%;
+          padding-bottom: 0; 
+          min-height: 120px; 
+      }
+
+      .school-image-placeholder img {
+          width: 100%;
+          max-width: 180px; 
+          height: 150px; 
+          border-radius: 5px;
+          object-fit: cover;
+          background-color: #388E3C; 
+          border: 1px solid #C8E6C9;
+      }
+
+      /* ================================================= */
+      /* === 6. ACHIEVEMENTS SPECIFIC STYLES (Horizontal) === */
+      /* ================================================= */
+        
+       .ach-card-item { 
+           background: rgba(28, 28, 28, 0.9); 
+           border-radius: 8px; 
+           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); 
+           border: 3px solid #FF1493; /* Neon Pink Border */
+           overflow: hidden; 
+           
+           /* --- UPDATED FOR HORIZONTAL FLOW --- */
+           width: 98%; /* Default mobile width */
+           max-width: 400px;
+           min-height: 120px; 
+           
+           margin: 5px 0;
+           display: flex; 
+           flex-direction: row; 
+           align-items: center; /* Center content vertically within the card */
+           padding: 10px; 
+           transition: transform 0.2s, box-shadow 0.2s;
         }
         
-        /* EDUCATION SPECIFIC STYLES */
-        .edu-card-item { 
-            background: rgba(28, 28, 28, 0.9); 
-            border-radius: 10px; padding: 10px 5px; 
-            text-align: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); 
-            display: flex; flex-direction: column; align-items: center; 
-            transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(177, 26, 182, 0.3); 
-            margin: 5px 0; 
-            width: 48%; 
-            min-height: 220px; /* FIX: Lengthen the frame to use bottom space (Mobile) */
-        }
-        .edu-level { font-weight: 700; color: #b11ab6; font-size: 0.9rem; margin-bottom: 3px; }
-        .edu-name { font-size: 0.7rem; color: #f0f0f0; line-height: 1.2; } 
-        .logo-frame-edu { width: 50px; height: 50px; border: 2px solid #555555; border-radius: 50%; overflow: hidden; flex-shrink: 0; margin-top: 5px; }
-        .logo-frame-edu img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-
-        /* --- ACHIEVEMENTS SPECIFIC STYLES (GOLD ACCENTS) --- */
-        .ach-card-item { 
-            background: #1c1c1c;
-            border-radius: 10px;
-            padding: 0;
-            text-align: left;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 2px solid #FFD700; 
-            margin-left: auto;
-            margin-right: auto;
-            overflow: hidden;
-            width: 95%; 
-            max-width: 300px;
-        }
         .ach-card-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4); 
+           transform: translateY(-3px);
+           box-shadow: 0 6px 20px rgba(255, 20, 147, 0.7); /* Pink shadow on hover */
         }
 
         .ach-image-container {
-            width: 100%;
-            aspect-ratio: 4/3; 
-            overflow: hidden;
-            background: #3a3200;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+           flex-shrink: 0;
+           width: 90px; height: 90px; /* Fixed size for image container */
+           overflow: hidden;
+           background: #3a3200;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           border-radius: 4px;
         }
         .ach-image-container img {
-            width: 100%;
-            height: 90%; 
-            object-fit: contain; 
+           width: 100%;
+           height: 100%; 
+           object-fit: cover; 
         }
 
         .ach-text-content {
-            padding: 12px;
-            color: #b0b0b0;
-            flex-grow: 1;
-            width: 100%;
+           padding-left: 15px;
+           color: #b0b0b0;
+           flex-grow: 1;
+           width: calc(100% - 105px); /* Take remaining width */
+           text-align: left;
         }
 
         .ach-level { 
-            font-weight: 700; 
-            color: #FFD700; 
-            font-size: 1.0rem; 
-            margin-bottom: 5px; 
-            text-align: left; 
+           font-weight: 700; 
+           color: #b11ab6; /* Purple/Pink title */
+           font-size: 0.9rem; 
+           margin-bottom: 3px; 
+           line-height: 1.2; 
         }
         .ach-name { 
-            font-size: 0.85rem; 
-            color: #b0b0b0; 
-            line-height: 1.4; 
-            text-align: left; 
+           font-size: 0.8rem; 
+           color: #f0f0f0; 
+           line-height: 1.4;
         }
-        
-        /* --- FAMILY PAGE SPECIFIC STYLES (BLUE/AQUA ACCENTS) --- */
-        #family h1 { 
-            color: #ffffff;
+
+      /* ================================================= */
+      /* === 7. FAMILY PAGE SPECIFIC STYLES (Horizontal) === */
+      /* ================================================= */
+      #family h1 { font-size: 32px; margin-bottom: 5px; } 
+      
+      .family-card-item {
+          /* --- UPDATED FOR HORIZONTAL FLOW --- */
+          width: 95%; 
+          max-width: 300px; /* Sets max width for horizontal arrangement on desktop */
+          min-height: 380px; /* Fixed size for better grid alignment */
+          
+          border: 2px solid #00FFFF; margin: 5px 0;
+          border-radius: 10px; overflow: hidden;
+          background: rgba(28, 28, 28, 0.9); 
+          display: flex; 
+          flex-direction: column; /* Vertical stacking within the card */
+          transition: transform 0.2s, box-shadow 0.2s;
+      }
+      
+      .family-card-item:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 6px 20px rgba(0, 255, 255, 0.5); /* Cyan shadow on hover */
+      }
+      
+      .family-image-container { 
+          height: 50%; 
+          aspect-ratio: auto; 
+          flex-shrink: 0; 
+          min-height: 150px;
+      }
+      .family-image-container img { 
+          width: 100%; height: 100%; 
+          object-fit: cover; /* Cover is better for fixed ratio containers */
+          object-position: top;
+      }
+      .family-text-content { 
+          padding: 10px; 
+          flex-grow: 1; 
+          overflow-y: auto; 
+      } 
+      .family-title { font-size: 1.0rem; color: #00FFFF; margin-bottom: 3px; font-weight: 700; }
+      .family-description { font-size: 0.8rem; line-height: 1.3; } 
+
+      /* ================================================= */
+      /* === 8. BATCHMATES PAGE SPECIFIC STYLES (Updated) === */
+      /* ================================================= */
+      
+      #batchmates { 
+            justify-content: flex-start; /* Align content to top for list */
+            /* --- REVEALED BACKGROUND --- */
+            background: url('https://lh3.googleusercontent.com/pw/AP1GczOK_KMrr_GSw_AjCxfCnfa69UVJz46tjdBJe_sLi-ig28sMJck0ahoDbbGyBY5c4tHKGnxwqngW_1IWHDFukO1KpJxe3_OEYCUrSduNpBkI7tny1Lg=w2400'); 
+            background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 10px; 
+            padding-top: 20px; /* Add padding to the top */
+            /* --------------------------- */
+      }
+      #batchmates h1 {
+            color: #bd93f9;
+            margin-top: 0; 
             margin-bottom: 20px;
-            font-size: 32px;
-        }
-        
-        .family-card-item {
-            background: #1c1c1c;
-            border-radius: 10px;
-            padding: 0; 
-            text-align: left;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 2px solid #00FFFF;
-            margin-left: auto;
-            margin-right: auto;
-            overflow: hidden;
-            width: 95%; 
-            max-width: 320px;
-        }
-        .family-card-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
-        }
-        
-        .family-image-container {
-            width: 100%;
-            aspect-ratio: 4/3; 
-            overflow: hidden;
-            background: #2b2b2b;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .family-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; 
-        }
+            /* Ensure title is visible over background */
+            background: rgba(10, 10, 10, 0.7); 
+            padding: 5px 10px;
+            border-radius: 5px;
+      }
 
-        .family-text-content {
-            padding: 15px;
-            color: #b0b0b0;
-            flex-grow: 1;
-        }
-        .family-title {
-            font-weight: 700;
-            color: #00FFFF; 
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-        .family-description {
-            font-size: 0.9rem;
-            line-height: 1.4;
-        } 
-
-        /* --- BATCHMATES PAGE SPECIFIC STYLES (Full Image Display) --- */
-        #batchmates { 
-            /* Remove padding and max-width to allow the full-page effect */
-            padding: 0; 
-            max-width: none; 
-            width: 100%;
-        }
-        
-        /* Hide page elements to focus on the full image */
-        #batchmates h1 {
+      /* HIDE the group photo card */
+      .group-photo-card {
             display: none; 
-        }
-        
-        /* Ensure the button container is visible for the back button on the last page */
-        #batchmates .nav-button-container {
-             display: flex; /* Override default hidden behavior to show back button */
-             justify-content: flex-end; /* Inherited from global setting */
-        }
-        
-        #batchmates .page-content-wrapper { 
-            padding: 0; 
-            overflow: hidden; 
-            justify-content: center;
-            align-items: center;
-            /* Allow content wrapper to take all available space to contain the image */
-            height: 100%;
+      }
+      
+      /* --- BATCHMATES FOOTER / NAME LIST STYLES (MODIFIED) --- */
+      .names-footer {
             width: 100%;
-        }
-        
-        .full-batchmates-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Cover the entire content area */
-            object-position: center;
-            flex-grow: 1;
-            /* Ensure the image doesn't get pushed by the footer's padding */
-            display: block;
-        }
+            max-width: 800px;
+            margin: 10px 0;
+            padding: 15px;
+            background: rgba(10, 10, 10, 0.85); /* Semi-transparent dark background for readability */
+            border: 1px solid rgba(189, 147, 249, 0.5); /* Purple border */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(189, 147, 249, 0.5);
+            /* Important: use margin-top auto to push it to the bottom-most position before nav buttons */
+            margin-top: auto; 
+      }
+      
+      .name-list-container {
+            display: flex;
+            flex-direction: column; /* Default to single column on mobile */
+            flex-wrap: wrap;
+            /* REMOVED: max-height: 70vh; to allow names to determine container height */
+      }
+      
+      .name-list-container p {
+            color: #f0f0f0;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            padding: 0 10px;
+            transition: color 0.2s;
+            white-space: nowrap; /* Prevent names from breaking */
+      }
+      
+      .name-list-container p:hover {
+            color: #bd93f9; /* Highlight color on hover */
+      }
 
-        /* ================================================= */
-        /* === 6. NAMES FOOTER STYLES (INJECTED) === */
-        /* ================================================= */
-        .names-footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 50;
-            /* Using user's gradient definitions */
-            background: linear-gradient(to top, rgba(10, 10, 26, 1) 50%, rgba(10, 10, 26, 0.806) 80%, transparent 100%); 
-            padding: 2rem 5% 3rem; 
-            display: none; /* Hidden by default, shown by JS on batchmates page */
-        }
-        .name-list-container {
-            column-count: 2; /* Default for mobile */
-            column-gap: 15px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .name-list-container p { 
-            font-size: 0.7rem; /* Smaller size for dense list */
-            margin-bottom: 0.2rem;
-            line-height: 1.4;
-            color: rgba(255, 255, 255, 0.8);
-            /* New user-provided break properties */
-            break-inside: avoid;
-            -webkit-column-break-inside: avoid;
-            page-break-inside: avoid;
-        }
+      /* Hiding individual elements */
+      .batchmates-title { display: none; } 
+      .batchmate-card-item { display: none; } 
 
-        /* ================================================= */
-        /* === 7. MEDIA QUERIES (DESKTOP) === */
-        /* ================================================= */
+      /* ================================================= */
+      /* === DESKTOP RESPONSIVENESS (Adjusted Grid) === */
+      /* ================================================= */
+      @media (min-width: 768px) {
+          
+          .page-content-wrapper { padding: 10px 0; }
+          
+          /* EDUCATION - 5 per row */
+          .edu-card-item {
+                width: 180px; 
+                height: 420px; 
+          }
 
-        @media (min-width: 1024px) {
-            
-            /* GLOBAL PAGE */
-            .page {
-                width: 75%;
-            }
+          /* ACHIEVEMENTS - 3 per row on desktop */
+          .ach-card-item { 
+              width: 31%; 
+              max-width: 320px;
+              min-height: 120px; 
+          }
+          .ach-image-container { 
+              width: 100px; height: 100px; 
+          }
 
-            /* EDUCATION - 4 per row */
-            .edu-card-item { width: 24%; min-height: 300px; } /* FIX: Lengthen the frame to use bottom space (Desktop) */
-            .logo-frame-edu { width: 70px; height: 70px; } 
+          /* FAMILY - 3 per row */
+          .family-card-item { 
+              width: 31%; 
+              max-width: 320px; 
+              min-height: 400px; 
+              max-height: 450px; 
+          }
+          .family-title { font-size: 1.1rem; }
+          .family-description { font-size: 0.9rem; }
 
-            /* ACHIEVEMENTS - 4 per row */ /* FIX: Adjusted size to not look too small */
-            .ach-card-item { width: 23%; max-height: 250px; flex-direction: column; justify-content: space-between; padding: 5px; } 
-            .ach-image-container { flex-basis: auto; width: 100%; height: 65%; padding: 0; }
-            .ach-level { font-size: 0.85rem; } 
-            .ach-name { font-size: 0.75rem; } 
-
-            /* FAMILY - 3 per row */
-            .family-card-item { width: 31%; max-height: 400px; }
-            .family-title { font-size: 1.1rem; }
-            .family-description { font-size: 0.9rem; }
-
-            /* NAMES FOOTER - Desktop 5 columns (Using user's provided desktop styles) */
-            .name-list-container { 
-                column-count: 5; 
-                column-gap: 20px; 
-            }
-            .name-list-container p { 
-                font-size: 0.85rem; 
-                margin-bottom: 0.3rem; 
-                color: rgba(255, 255, 255, 0.9);
-            }
-        }
+          /* BATCHMATES - Column layout for names on desktop */
+          .name-list-container {
+              flex-direction: row; 
+              justify-content: space-evenly;
+              /* REMOVED max-height to ensure all fit vertically */
+              column-count: 2; /* Automatically create 2 columns */
+          }
+          .name-list-container p {
+               break-inside: avoid-column; /* Prevent names from splitting across columns */
+               width: auto; /* Allow column layout to manage width */
+          }
+          #batchmates .card-container { display: none; } 
+      }
     </style>
 </head>
+
 <body>
     <div class="video-background">
-        <iframe src="https://www.youtube.com/embed/m1YUmZRfgqU?autoplay=1&mute=1&loop=1&playlist=m1YUmZRfgqU&controls=0&disablekb=1&fs=0&iv_load_policy=3&modestbranding=1&rel=0&showinfo=0&widgetid=1" frameborder="0" allow="autoplay; encrypted-media; loop" allowfullscreen> </iframe>
+        <iframe 
+            src="https://www.youtube.com/embed/m1YUmZRfgqU?autoplay=1&mute=1&loop=1&playlist=m1YUmZRfgqU&controls=0&disablekb=1&fs=0&iv_load_policy=3&modestbranding=1&rel=0&showinfo=0&widgetid=1" 
+            frameborder="0" 
+            allow="autoplay; encrypted-media; loop" 
+            allowfullscreen>
+        </iframe>
     </div>
+
     <div id="pre-load" class="loader">
         <div class="loader-inner">
             <div class="loader-logo">
-                <svg viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M16.5 12L13 14.333V19L20 14.333V9.667L13 5V9.667L16.5 12Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+              <svg viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.5 12L13 14.333V19L20 14.333V9.667L13 5V9.667L16.5 12Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
             <div class="box"></div>
             <div class="box"></div>
@@ -551,21 +632,25 @@
             <div class="box"></div>
         </div>
     </div>
-    
+
     <nav>
         <a id="nav-home" onclick="triggerShowPage('home')">About Me</a>
         <a id="nav-education" onclick="triggerShowPage('education')">Education</a>
         <a id="nav-achievements" onclick="triggerShowPage('achievements')">Achievements</a>
         <a id="nav-family" onclick="triggerShowPage('family')">My Family</a>
-        <a id="nav-batchmates" onclick="triggerShowPage('batchmates')">My Batchmates</a>
+        <a id="nav-batchmates" onclick="triggerShowPage('batchmates')">My Batchmates</a> 
     </nav>
 
-    <div class="page" id="home">
+    <div class="page active" id="home">
         <h1 class="personal-name">Shiela Mar Tengay</h1>
+
         <div class="home-content animate-in">
             <div class="profile-frame">
-                <img src="https://lh3.googleusercontent.com/pw/AP1GczPxyex_ZM1HnjC28nQjESOUETZqBjzP-5ysIp5BUaojAtn7iUmIXTOpT1xOUNXW_7F85CfCLn4dASzc--Wuc2BvqdT_zF8S54VkQH9WBJ0iYfFt-co=w2400" alt="Profile Picture" onerror="this.onerror=null; this.src='https://placehold.co/280x280/333333/FFFFFF?text=Shiela+Photo';">
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczPxyex_ZM1HnjC28nQjESOUETZqBjzP-5ysIp5BUaojAtn7iUmIXTOpT1xOUNXW_7F85CfCLn4dASzc--Wuc2BvqdT_zF8S54VkQH9WBJ0iYfFt-co=w2400"
+                    alt="Profile Picture"
+                    onerror="this.onerror=null; this.src='https://placehold.co/280x280/333333/FFFFFF?text=Shiela+Photo';">
             </div>
+
             <div class="text-bubble">
                 <h2>Hi, I'm Shiela! An IT student majoring in Web Technology</h2>
                 <p>
@@ -573,6 +658,7 @@
                 </p>
             </div>
         </div>
+
         <div class="nav-button-container">
             <button class="nav-button nav-button-back" onclick="triggerShowPage('batchmates')"><< Back</button>
             <button class="nav-button nav-button-next" onclick="triggerShowPage('education')">Next >></button>
@@ -580,65 +666,88 @@
     </div>
 
     <div class="page" id="education">
+        <h1>EDUCATIONAL BACKGROUND</h1>
         <div class="page-content-wrapper animate-in">
-            <h1>EDUCATIONAL BACKGROUND</h1>
-            <div class="card-container">
+            
+            <div class="edu-card-container">
                 <div class="edu-card-item">
                     <div class="logo-frame-edu">
-                        <img src="https://lh3.googleusercontent.com/pw/AP1GczO5hJlqwuUsm4aSPIA0RB4GUWm5C9j0C7c__CzzH6iAgFrOebx77G5zFDIoE4sVn0S3uEc4LHWs3M7UReseqnkKLZoJSiQ_DSmXeBB77LV4F" alt="Tarlac Agricultural University Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=TAU';">
+                        <img src="logo-url-uc.png" alt="UC Logo" onerror="this.onerror=null; this.src='https://placehold.co/60x60/dddddd/333333?text=UC';">
                     </div>
                     <div class="edu-details">
-                        <span class="edu-level">Tarlac Agricultural University</span>
-                        <span class="edu-name">Bachelor of Science in Information Technology, Major in Web Technology<br>2023-Present</span>
+                        <div class="edu-level">University of the Cordilleras</div>
+                        <div class="edu-name">Bachelor of Science in Information Technology-Web Technology</div>
+                        <div class="edu-year">2025-Present</div>
+                    </div>
+                    
+                    <div class="school-image-placeholder">
+                        <img src="school-photo-uc.jpg" alt="Photo of UC" onerror="this.onerror=null; this.src='https://placehold.co/180x150/388E3C/C8E6C9?text=UC+Photo';">
                     </div>
                 </div>
+
                 <div class="edu-card-item">
                     <div class="logo-frame-edu">
-                        <img src="https://lh3.googleusercontent.com/pw/AP1GczO5hJlqwuUsm4aSPIA0RB4GUWm5C9j0C7c__CzzH6iAgFrOebx77G5zFDIoE4sVn0S3uEc4LHWs3M7UReseqnkKLZoJSiQ_DSmXeBB77LV4FNN-wto=w24006" alt="Victoria National High School Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=VNHS';">
+                        <img src="logo-url-bcnhs.png" alt="BCNHS Logo" onerror="this.onerror=null; this.src='https://placehold.co/60x60/dddddd/333333?text=BCNHS';">
                     </div>
                     <div class="edu-details">
-                        <span class="edu-level">Victoria National High School</span>
-                        <span class="edu-name">Senior High School (STEM)<br>2021-2023</span>
+                        <div class="edu-level">Baguio City National High School</div>
+                        <div class="edu-name">High School</div>
+                        <div class="edu-track">STEM</div>
+                        <div class="edu-year">2019-2025</div>
+                    </div>
+                    
+                    <div class="school-image-placeholder">
+                        <img src="school-photo-bcnhs.jpg" alt="Photo of BCNHS" onerror="this.onerror=null; this.src='https://placehold.co/180x150/388E3C/C8E6C9?text=BCNHS+Photo';">
                     </div>
                 </div>
+
                 <div class="edu-card-item">
                     <div class="logo-frame-edu">
-                        <img src="https://lh3.googleusercontent.com/pw/AP1GczO5hJlqwuUsm4aSPIA0RB4GUWm5C9j0C7c__CzzH6iAgFrOebx77G5zFDIoE4sVn0S3uEc4LHWs3M7UReseqnkKLZoJSiQ_DSmXeBB77LV4FNN-wto=w24007" alt="Victoria National High School Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=VNHS';">
+                        <img src="logo-url-mlqes.png" alt="MLQES Logo" onerror="this.onerror=null; this.src='https://placehold.co/60x60/dddddd/333333?text=MLQES';">
                     </div>
                     <div class="edu-details">
-                        <span class="edu-level">Victoria National High School</span>
-                        <span class="edu-name">Junior High School<br>2017-2021</span>
+                        <div class="edu-level">Manuel L. Quezon Elementary School</div>
+                        <div class="edu-name">Grade 5-6</div>
+                        <div class="edu-year">2017-2019</div>
+                    </div>
+                    
+                    <div class="school-image-placeholder">
+                        <img src="school-photo-mlqes.jpg" alt="Photo of MLQES" onerror="this.onerror=null; this.src='https://placehold.co/180x150/388E3C/C8E6C9?text=MLQES+Photo';">
                     </div>
                 </div>
+
                 <div class="edu-card-item">
                     <div class="logo-frame-edu">
-                        <img src="https://lh3.googleusercontent.com/pw/AP1GczO5hJlqwuUsm4aSPIA0RB4GUWm5C9j0C7c__CzzH6iAgFrOebx77G5zFDIoE4sVn0S3uEc4LHWs3M7UReseqnkKLZoJSiQ_DSmXeBB77LV4FNN-wto=w24008" alt="Our Lady of the Immaculate School Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=OLIS';">
+                        <img src="logo-url-mis.png" alt="MIS Logo" onerror="this.onerror=null; this.src='https://placehold.co/60x60/dddddd/333333?text=MIS';">
                     </div>
                     <div class="edu-details">
-                        <span class="edu-level">Our Lady of the Immaculate School</span>
-                        <span class="edu-name">Elementary School (Grade 5-6)<br>2017-2019</span>
+                        <div class="edu-level">Mary Immaculate School</div>
+                        <div class="edu-name">Grade 1-4</div>
+                        <div class="edu-year">2013-2017</div>
+                    </div>
+                    
+                    <div class="school-image-placeholder">
+                        <img src="school-photo-mis.jpg" alt="Photo of MIS" onerror="this.onerror=null; this.src='https://placehold.co/180x150/388E3C/C8E6C9?text=MIS+Photo';">
                     </div>
                 </div>
+
                 <div class="edu-card-item">
                     <div class="logo-frame-edu">
-                        <img src="https://lh3.googleusercontent.com/pw/AP1GczO5hJlqwuUsm4aSPIA0RB4GUWm5C9j0C7c__CzzH6iAgFrOebx77G5zFDIoE4sVn0S3uEc4LHWs3M7UReseqnkKLZoJSiQ_DSmXeBB77LV4FNN-wto=w24009" alt="Holy Cross Academy Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=HCA';">
+                        <img src="logo-url-pcclc.png" alt="PCCLC Logo" onerror="this.onerror=null; this.src='https://placehold.co/60x60/dddddd/333333?text=PCCLC';">
                     </div>
                     <div class="edu-details">
-                        <span class="edu-level">Holy Cross Academy</span>
-                        <span class="edu-name">Elementary School (Grade 1-4)<br>2013-2017</span>
+                        <div class="edu-level">Poliwes Community Church Learning Center</div>
+                        <div class="edu-name">Nursery and Kindergarten</div>
+                        <div class="edu-year">2011-2013</div>
                     </div>
-                </div>
-                <div class="edu-card-item">
-                    <div class="logo-frame-edu">
-                        <img src="https://lh3.googleusercontent.com/pw/AP1GczM2kGehCgwV52p3DNWxkRpYiJkOv7wVhczW9RHfekXhwvqvdDvPZlQKjDjse8rYm67U9AKOpDNHix9xrGwMQT5VCRy7fB6xuLBqh97COw1Jos2Upw=w24000" alt="Poliwes Community Church Learning Center Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=PCCLC';">
-                    </div>
-                    <div class="edu-details">
-                        <span class="edu-level">Poliwes Community Church Learning Center</span>
-                        <span class="edu-name">Nursery and Kindergarten<br>2011-2013</span>
+                    
+                    <div class="school-image-placeholder">
+                        <img src="school-photo-pcclc.jpg" alt="Photo of PCCLC" onerror="this.onerror=null; this.src='https://placehold.co/180x150/388E3C/C8E6C9?text=PCCLC+Photo';">
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="nav-button-container">
             <button class="nav-button nav-button-back" onclick="triggerShowPage('home')"><< Back</button>
             <button class="nav-button nav-button-next" onclick="triggerShowPage('achievements')">Next >></button>
@@ -648,19 +757,18 @@
     <div class="page" id="achievements">
         <h1>ACHIEVEMENTS</h1>
         <div class="page-content-wrapper animate-in">
-            <div class="card-container">
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczMVNlicZgohfbPhskj3HX4kla5zDcoe3cTf7nQNKcOu_Iyd-xOp0K7TiIutQ0Re6kZBEua_JL4H7t-6TfcinD_3-dZEgBJqM-T1NuOzQZcH36VZXA=w2400" alt="With Honors(SY 2024-2025)" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2024-2025)</div><div class="ach-name">Graduate of the STEM strand.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOc6U2pzNzyDbxdeCPP6V0f0P69McwNzRk4ATiMod21AqQDGI-qof6OiuUV9-ai-FaJHE96aGUjEeQEizuMIbZTaYd0Ci4_Pj6nG2U4j5ht21iBwg=w2400" alt="With Honors (SY 2023-2024)" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Award';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2023-2024)</div><div class="ach-name">Recognized for academic excellence.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOGifDzS3a5NwMp88gzSYO1mk8LaLDMV-b7-W7lnpeWCcCgyojeYVzSm_RKPGd-Yu7ofLQVN_8vBSJy2Eye0Nqw4tTMAvsWAMot9jXXcPV863y7sw=w2400" alt="With Honors (SY 2022-2023)" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2022-2023)</div><div class="ach-name">Consistent academic recognition in Junior High School.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOkQ-7pzS4ZzJOW49bqD3VGk9hCBO3jsF1XVsliigxIw4QCEfCdNjo_nHVDsx4NxEeuTYP8-3Xk0z7-riBHVtEe_cbPtKMfCGs4C1ogdf_DWV-2Cw=w2400" alt="Best in Computer System Servicing" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Award';"></div><div class="ach-text-content"><div class="ach-level">Best in Computer System Servicing</div><div class="ach-name">Awarded for outstanding performance in technical vocational subject.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOcR6H_hXqY4_qSY2VqIh9RfUL9MOGjpwMJOL03rz-1ZFJF4HZzyBBf9ZG6zr5eeCOhzYDXstumQTEc6bxJTiGv7ZLYMkdllcZOSq_-y5sSMJNt1g=w2400" alt="Best in Entrepreneurship" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">Best in Entrepreneurship</div><div class="ach-name">Recognized for exceptional aptitude and project delivery in the subject.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOys8XCp0YCZ0wh3ccTpRyU4j-3WhxHARQEqaR70IVkDUgkcRxwim9glaYRi9C_LxH7mgp2WMB0LKpVjl_1wQIoIGp8Rf6ZVr0ndzZcKsH-yJgyIA=w2400" alt="Certificate of Completion for CSS NC II" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">Certificate of Completion for CSS NC II</div><div class="ach-name">Achieved National Certification Level II in Computer System Servicing.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczO3W0TSW6y2XFevFTsx0xKC2xO3zrfUGMOydu1HlP5LDHsvByaT8PQY2kTXl6sh9OLinT2p_DQ7sTbNC4BTZ4gN34gP0zBH2TrjbzuXlsSjzqhnHg=w2400" alt="Regional Science Fair Finalist" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">Regional Science Fair Finalist</div><div class="ach-name">Qualified and competed at the regional level of the Science Fair.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczMMZBYSzZxLuaBgvMubIO_lTK_HXeZR4EDH8cyj92BbjdOk9WchcN2fApLatgu3bbC2uYTZ_imCH3lq9XMgDv3OV_rFU9Zj8QV1BaUV217tmMzFnw=w2400" alt="Municipal Science Fair - 2nd Place" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Award';"></div><div class="ach-text-content"><div class="ach-level">Municipal Science Fair - 2nd Place</div><div class="ach-name">Secured second place in the local science competition.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczPM9D5qtrM-4NFqS4WOQAF_opILuH3YicVBjXRQa15SgXfRmswteNmdqk3X5_wCJA6lW1HFAMdnLqoLmdSyoZaP7gj95-qSGiw5rbg22xEZ1omtEg=w2400" alt="With Honors (SY 2021-2022)" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2021-2022)</div><div class="ach-name">Achieved academic honors in the 9th grade.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczM8zSN-yvTcbHSpWZMdX3WEpENyeKvWBnzsI_GbTLyEoEuLSQCST0dyoEw3S2lDMm0vRtU0vvgvMasR4yVhrqrPBS14JcTOKpftgsNR2-_QusKLDHo=w2400" alt="With Honors (SY 2020-2021)" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Award';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2020-2021)</div><div class="ach-name">Achieved academic honors in the 8th grade.</div></div></div>
+            <div class="card-container"> 
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczMVNlicZgohfbPhskj3HX4kla5zDcoe3cTf7nQNKcOu_Iyd-xOp0K7TiIutQ0Re6kZBEua_JL4H7t-6TfcinD_3-dZEgBJqM-T1NuOzQZcH36VZXA=w2400" alt="With Honors(SY 2024-2025)" onerror="this.onerror=null; this.src='https://placehold.co/90x90/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2024-2025)</div><div class="ach-name">Graduate of the STEM strand.</div></div></div>
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOc6U2pzNzyDbxdeCPP6V0f0P69McwNzRk4ATiMod21AqQDGI-qof6OiuUV9-ai-FaJHE96aGUjEeQEizuMIbZTaYd0Ci4_Pj6nG2U4j5ht21iBwg=w2400" alt="With Honors (SY 2023-2024)" onerror="this.onerror=null; this.src='https://placehold.co/90x90/3a3200/FFD700?text=Award';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2023-2024)</div><div class="ach-name">Recognized for academic excellence.</div></div></div>
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOGifDzS3a5NwMp88gzSYO1mk8LaLDMV-b7-W7lnpeWCcCgyojeYVzSm_RKPGd-Yu7ofLQVN_8vBSJy2Eye0Nqw4tTMAvsWAMot9jXXcPV863y7sw=w2400" alt="With Honors (SY 2022-2023)" onerror="this.onerror=null; this.src='https://placehold.co/90x90/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2022-2023)</div><div class="ach-name">Achieved Academic Distinction and completed in the Special Program in Journalism.</div></div></div>
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOkQ-7pzS4ZzJOW49bqD3VGk9hCBO3jsF1XVsliigxIw4QCEfCdNjo_nHVDsx4NxEeuTYP8-3Xk0z7-riBHVtEe_cbPtKMfCGs4C1ogdf_DWV-2Cw=w2400" alt="Elementary Photo" onerror="this.onerror=null; this.src='https://placehold.co/90x90/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2021-2022)</div><div class="ach-name">Awarded for general academic achievement.</div></div></div>
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOcR6H_hXqY4_qSY2VqIh9RfUL9MOGjpwMJOL03rz-1ZFJF4HZzyBBf9ZG6zr5eeCOhzYDXstumQTEc6bxJTiGv7ZLYMkdllcZOSq_-y5sSMJNt1g=w2400" alt="Elementary Photo" onerror="this.onerror=null; this.src='https://placehold.co/90x90/3a3200/FFD700?text=Award';"></div><div class="ach-text-content"><div class="ach-level">Outstanding Journalist</div><div class="ach-name">Recognized for excellence in campus journalism.</div></div></div>
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOys8XCp0YCZ0wh3ccTpRyU4j-3WhxHARQEqaR70IVkDUgkcRxwim9glaYRi9C_LxH7mgp2WMB0LKpVjl_1wQIoIGp8Rf6ZVr0ndzZcKsH-yJgyIA=w2400" alt="Elementary Photo" onerror="this.onerror=null; this.src='https://placehold.co/90x90/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">Outstanding Student Researcher (2024)</div><div class="ach-name">For exemplary performance in a science and technology project.</div></div></div>
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczO3W0TSW6y2XFevFTsx0xKC2xO3zrfUGMOydu1HlP5LDHsvByaT8PQY2kTXl6sh9OLinT2p_DQ7sTbNC4BTZ4gN34gP0zBH2TrjbzuXlsSjzqhnHg=w2400" alt="Elementary Photo" onerror="this.onerror=null; this.src='https://placehold.co/90x90/3a3200/FFD700?text=Award';"></div><div class="ach-text-content"><div class="ach-level">Leadership Award (2023)</div><div class="ach-name">For outstanding leadership as Class President.</div></div></div>
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczMMZBYSzZxLuaBgvMubIO_lTK_HXeZR4EDH8cyj92BbjdOk9WchcN2fApLatgu3bbC2uYTZ_imCH3lq9XMgDv3OV_rFU9Zj8QV1BaUV217tmMzFnw=w2400" alt="Elementary Photo" onerror="this.onerror=null; this.src='https://placehold.co/90x90/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">Best in Extemporaneous Speaking</div><div class="ach-name">Awarded during the Division Secondary Schools Press Conference.</div></div></div>
             </div>
         </div>
+
         <div class="nav-button-container">
             <button class="nav-button nav-button-back" onclick="triggerShowPage('education')"><< Back</button>
             <button class="nav-button nav-button-next" onclick="triggerShowPage('family')">Next >></button>
@@ -673,33 +781,42 @@
             <div class="card-container">
                 <div class="family-card-item">
                     <div class="family-image-container">
-                        <img src="https://lh3.googleusercontent.com/pw/AP1GczPUslJo0j6NooPOHZwf1biNdTaJaRx_lFqhnNRLevRrME2aKI7FAGmG7whs5quSEEAu7OhBdPw5sB717HVKFJQtxqGPQgCmr1NlVdUYn7BwDP81rns=w2400" alt="Mother Photo Placeholder" onerror="this.onerror=null; this.src='https://placehold.co/320x240/77b8ff/333333?text=Mother';">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczPM9D5qtrM-4NFqS4WOQAF_opILuH3YicVBjXRQa15SgXfRmswteNmdqk3X5_wCJA6lW1HFAMdnLqoLmdSyoZaP7gj95-qSGiw5rbg22xEZ1omtEg=w2400" alt="Mother" onerror="this.onerror=null; this.src='https://placehold.co/300x150/20B2AA/FFFFFF?text=Mother+Photo';">
                     </div>
                     <div class="family-text-content">
-                        <div class="family-title">Mother - A Shining Star</div>
-                        <div class="family-description">My mother is the sun in my sky, illuminating my path with her unwavering love and sacrifice. She is the anchor that holds my world steady, and my greatest source of inspiration.</div>
+                        <div class="family-title">Mother - Aaliyah F. Tengay</div>
+                        <div class="family-description">
+                            The backbone of our family, her unwavering support and boundless love are the foundation of my life. She teaches me the value of perseverance and kindness every day.
+                        </div>
                     </div>
                 </div>
+
                 <div class="family-card-item">
                     <div class="family-image-container">
-                        <img src="https://lh3.googleusercontent.com/pw/AP1GczPVzsipClJjoKi0LHls_XemS0sdtCYVRHP_x8ae2NjE1UNVc8y_vqWLKkdb9a5fu_WPiVhZoJQJ6xgaY2mF_2JsGwyh451AofhKaq0jAdZgpsRB2cQ=w2400" alt="Father Photo Placeholder" onerror="this.onerror=null; this.src='https://placehold.co/320x240/77b8ff/333333?text=Father';">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczMVNlicZgohfbPhskj3HX4kla5zDcoe3cTf7nQNKcOu_Iyd-xOp0K7TiIutQ0Re6kZBEua_JL4H7t-6TfcinD_3-dZEgBJqM-T1NuOzQZcH36VZXA=w24000" alt="Father" onerror="this.onerror=null; this.src='https://placehold.co/300x150/20B2AA/FFFFFF?text=Father+Photo';">
                     </div>
                     <div class="family-text-content">
-                        <div class="family-title">Father - A True Role Model</div>
-                        <div class="family-description">My father is the wind beneath my wings, always pushing me to reach new heights. This photo shows me shaking my father’s hand as a sign of respect, gratitude, and acknowledgment of his support and guidance in my life.</div>
+                        <div class="family-title">Father - Alon M. Tengay</div>
+                        <div class="family-description">
+                            A constant source of strength and guidance. His commitment to providing for us inspires me to work hard and strive for my goals in education and my career.
+                        </div>
                     </div>
                 </div>
+
                 <div class="family-card-item">
                     <div class="family-image-container">
-                        <img src="https://lh3.googleusercontent.com/pw/AP1GczO5hJlqwuUsm4aSPIA0RB4GUWm5C9j0C7c__CzzH6iAgFrOebx77G5zFDIoE4sVn0S3uEc4LHWs3M7UReseqnkKLZoJSiQ_DSmXeBB77LV4F" alt="Jared,Sergio,Juno,Kayden Photo Placeholder" onerror="this.onerror=null; this.src='https://placehold.co/320x240/77b8ff/333333?text=Best+Friends';">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczMVNlicZgohfbPhskj3HX4kla5zDcoe3cTf7nQNKcOu_Iyd-xOp0K7TiIutQ0Re6kZBEua_JL4H7t-6TfcinD_3-dZEgBJqM-T1NuOzQZcH36VZXA=w24001" alt="Younger Brother" onerror="this.onerror=null; this.src='https://placehold.co/300x150/20B2AA/FFFFFF?text=Brother+Photo';">
                     </div>
                     <div class="family-text-content">
-                        <div class="family-title">Jared, Sergio, Juno, Kayden (Siblings)</div>
-                        <div class="family-description">Bound by blood and memories, my siblings are the verses in the poem of my life. Together, we show more than just presence, but also a bond that no one can break, a connection built on love and shared memories.</div>
+                        <div class="family-title">Younger Brother - Sol M. Tengay</div>
+                        <div class="family-description">
+                            My younger brother, who is full of energy and curiosity. He keeps life exciting and reminds me to always approach challenges with a sense of wonder.
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="nav-button-container">
             <button class="nav-button nav-button-back" onclick="triggerShowPage('achievements')"><< Back</button>
             <button class="nav-button nav-button-next" onclick="triggerShowPage('batchmates')">Next >></button>
@@ -707,17 +824,36 @@
     </div>
 
     <div class="page" id="batchmates">
+        <h1>MY BATCHMATES</h1>
         <div class="page-content-wrapper animate-in">
-            <img src="Untitled Project.jpg" alt="Group Photo of Batchmates, Final Page Display..." class="full-batchmates-image">
+            
+            <div class="card-container"> 
+                <div class="group-photo-card">
+                    <div class="family-image-container">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczMVNlicZgohfbPhskj3HX4kla5zDcoe3cTf7nQNKcOu_Iyd-xOp0K7TiIutQ0Re6kZBEua_JL4H7t-6TfcinD_3-dZEgBJqM-T1NuOzQZcH36VZXA=w24002" alt="Batchmates Group Photo" onerror="this.onerror=null; this.src='https://placehold.co/800x200/0000FF/FFFFFF?text=Batchmates+Photo';">
+                    </div>
+                    <div class="family-text-content">
+                        <div class="family-title batchmates-title">Our Cohort: Web Technology 2025</div>
+                        <div class="family-description">
+                            The team that shares the journey.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="batchmate-card-item">
+                    <div class="family-image-container">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczMVNlicZgohfbPhskj3HX4kla5zDcoe3cTf7nQNKcOu_Iyd-xOp0K7TiIutQ0Re6kZBEua_JL4H7t-6TfcinD_3-dZEgBJqM-T1NuOzQZcH36VZXA=w24003" alt="Batchmate Photo" onerror="this.onerror=null; this.src='https://placehold.co/300x150/800080/FFFFFF?text=Batchmate+1';">
+                    </div>
+                    <div class="family-text-content">
+                        <div class="family-title">Batchmate 1</div>
+                        <div class="family-description">Description of batchmate 1</div>
+                    </div>
+                </div>
+                </div>
         </div>
-        <div class="nav-button-container">
-            <button class="nav-button nav-button-back" onclick="triggerShowPage('family')"><< Back</button>
-            </div>
-    </div>
-    
-    <footer class="names-footer">
-        <div class="name-list-container">
-            <p>AGUILAR, STEPHEN NASH</p>
+        <div class="names-footer">
+            <div class="name-list-container">
+                <p>AGUILAR, STEPHEN NASH</p>
             <p>AGUSTIN, JHON RUMSY</p>
             <p>ALMUETE, EDMAR</p>
             <p>BAL-UT, SHAWN MICHAEL</p>
@@ -755,79 +891,59 @@
             <p>TENGAY, SHIELA MAR</p>
             <p>UCOL, RAIAH CRISTA</p>
             <p>UMOTOY, MANUEL JUN</p>
+            </div>
         </div>
-    </footer>
+        
+        <div class="nav-button-container">
+            <button class="nav-button nav-button-back" onclick="triggerShowPage('family')"><< Back</button>
+            <button class="nav-button nav-button-next" onclick="triggerShowPage('home')">Next >></button>
+        </div>
+    </div>
 
     <script>
-        const LOADER_DURATION = 500; // Time in ms for the loader to show
-        const loader = document.getElementById('pre-load');
-
-        /**
-         * The core function to switch pages and handle visual updates.
-         * @param {string} pageId - The ID of the page to show.
-         */
-        function showPage(pageId) {
-            const pages = document.querySelectorAll('.page');
-            const targetPage = document.getElementById(pageId);
-            // CRITICAL: Use the tag name or a specific selector to find the footer
-            const footer = document.querySelector('.names-footer');
-            const videoBackground = document.querySelector('.video-background');
-
-            // 1. Hide all pages and remove animation class
-            pages.forEach(page => {
-                page.classList.remove('active', 'animate-in');
+        const pages = ['home', 'education', 'achievements', 'family', 'batchmates'];
+        let currentPageIndex = 0;
+        
+        function updateNavActive() {
+            const pageId = pages[currentPageIndex];
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('nav-active');
             });
+            document.getElementById(`nav-${pageId}`).classList.add('nav-active');
+        }
 
-            // 2. Show the target page and apply animation
-            if (targetPage) {
-                const activePage = targetPage;
-                // Force a reflow before adding the class to restart the CSS animation
-                void activePage.offsetWidth; 
-                activePage.classList.add('active', 'animate-in');
-            }
+        function triggerShowPage(pageId) {
+            const newIndex = pages.indexOf(pageId);
+            if (newIndex === -1) return; 
 
-            // Show/Hide the names footer based on pageId
-            if (footer) {
-                footer.style.display = pageId === 'batchmates' ? 'block' : 'none';
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            const newPage = document.getElementById(pageId);
+            if (newPage) {
+                newPage.classList.add('active');
             }
             
-            // Re-hide the video background when on the batchmates page
-            if (videoBackground) {
-                videoBackground.style.display = pageId === 'batchmates' ? 'none' : 'block';
-            }
-
-            // Update Nav Bar Active State
-            document.querySelectorAll('nav a').forEach(a => a.classList.remove('nav-active'));
-            const activeLink = document.getElementById(`nav-${pageId}`);
-            if (activeLink) {
-                activeLink.classList.add('nav-active');
-            }
+            currentPageIndex = newIndex;
+            updateNavActive();
         }
-
-        /**
-         * Triggers the page switch sequence with a loader transition.
-         * @param {string} pageId - The ID of the page to navigate to.
-         */
-        function triggerShowPage(pageId) {
-            // 1. Force the loader to show
-            loader.classList.add('show');
-            loader.classList.remove('hide');
-
-            // 2. Schedule the page switch and loader hide
+        
+        // Loader logic (remains the same)
+        window.addEventListener('load', () => {
+            const preLoad = document.getElementById('pre-load');
             setTimeout(() => {
-                showPage(pageId);
-                loader.classList.remove('show');
-                loader.classList.add('hide');
-            }, LOADER_DURATION);
-        }
-
+                preLoad.classList.add('hide');
+            }, 500); // 0.5s fade out
+            
+            // Set initial active page and nav link
+            updateNavActive();
+        });
+        
+        // Initial setup
         document.addEventListener('DOMContentLoaded', () => {
-            // CRITICAL FIX: Ensure the home page displays immediately after a brief loading effect
-            setTimeout(() => {
-                showPage('home');
-                loader.classList.remove('show');
-                loader.classList.add('hide');
-            }, LOADER_DURATION); 
+             // Ensure the initial page is active
+             document.getElementById('home').classList.add('active');
         });
     </script>
 </body>
