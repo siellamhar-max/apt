@@ -421,20 +421,26 @@
 
         /* --- BATCHMATES PAGE SPECIFIC STYLES (Full Image Display) --- */
         #batchmates { 
-            justify-content: flex-start; /* Align content to the top */
-            padding: 0; /* Remove padding to allow image to stretch */
-            max-width: none; /* Allow full width */
+            /* Remove padding and max-width to allow the full-page effect */
+            padding: 0; 
+            max-width: none; 
             width: 100%;
         }
+        
+        /* Hide page elements to focus on the full image */
         #batchmates h1,
         #batchmates .nav-button-container {
-            display: none; /* Hide H1 and Nav buttons for a full-screen image effect */
+            display: none; 
         }
+        
         #batchmates .page-content-wrapper { 
             padding: 0; 
             overflow: hidden; 
             justify-content: center;
             align-items: center;
+            /* Allow content wrapper to take all available space to contain the image */
+            height: 100%;
+            width: 100%;
         }
         
         .full-batchmates-image {
@@ -443,10 +449,12 @@
             object-fit: cover; /* Cover the entire content area */
             object-position: center;
             flex-grow: 1;
+            /* Ensure the image doesn't get pushed by the footer's padding */
+            display: block;
         }
 
         /* ================================================= */
-        /* === 6. NAMES FOOTER STYLES === */
+        /* === 6. NAMES FOOTER STYLES (INJECTED) === */
         /* ================================================= */
 
         .names-footer {
@@ -458,12 +466,13 @@
             /* Gradient for fade-out effect */
             background: linear-gradient(to top, rgba(10, 10, 26, 1) 50%, rgba(10, 10, 26, 0.806) 80%, transparent 100%);
             padding: 2rem 5% 3rem;
+            display: none; /* Hidden by default, shown by JS on batchmates page */
         }
 
         .name-list-container {
             column-count: 2; /* Default for mobile */
             column-gap: 15px;
-            max-width: 1000px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
