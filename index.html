@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -241,10 +242,10 @@
             100% { opacity: 0.7; }
         }
         @keyframes bobbing {
-          0%   { transform: translateY(0); }
-          25%  { transform: translateY(-20px); }
-          50%  { transform: translateY(0); }
-          75%  { transform: translateY(20px); }
+          0%   { transform: translateY(0); }
+          25%  { transform: translateY(-20px); }
+          50%  { transform: translateY(0); }
+          75%  { transform: translateY(20px); }
           100% { transform: translateY(0); }
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -520,36 +521,33 @@
             display: none; 
       }
       
-      /* --- BATCHMATES FOOTER / NAME LIST STYLES (MODIFIED) --- */
-      .names-footer {
-            width: 100%;
-            max-width: 800px;
-            margin: 10px 0;
-            padding: 15px;
-            background: rgba(10, 10, 10, 0.85); /* Semi-transparent dark background for readability */
-            border: 1px solid rgba(189, 147, 249, 0.5); /* Purple border */
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(189, 147, 249, 0.5);
-            /* Important: use margin-top auto to push it to the bottom-most position before nav buttons */
-            margin-top: auto; 
-      }
-      
-      .name-list-container {
-            display: flex;
-            flex-direction: column; /* Default to single column on mobile */
-            flex-wrap: wrap;
-            /* REMOVED: max-height: 70vh; to allow names to determine container height */
-      }
-      
-      .name-list-container p {
-            color: #f0f0f0;
-            font-size: 0.9rem;
-            line-height: 1.8;
-            padding: 0 10px;
-            transition: color 0.2s;
-            white-space: nowrap; /* Prevent names from breaking */
-      }
-      
+      /* =============== NAMES FOOTER =============== */
+.names-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: linear-gradient(to top, rgba(10, 10, 26, 1), rgba(10, 10, 26, 0.806), transparent 100%);
+    padding: 2rem 5% 3rem;
+}
+
+.name-list-container {
+    column-count: 5;
+    column-gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.name-list-container p {
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.9);
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+}
       .name-list-container p:hover {
             color: #bd93f9; /* Highlight color on hover */
       }
@@ -557,6 +555,11 @@
       /* Hiding individual elements */
       .batchmates-title { display: none; } 
       .batchmate-card-item { display: none; } 
+
+      /* BATCHMATES PAGE Logic Adjustment: */
+        #home .nav-button-container .nav-button-next { 
+            display: none; 
+        }
 
       /* ================================================= */
       /* === DESKTOP RESPONSIVENESS (Adjusted Grid) === */
@@ -860,10 +863,14 @@
                     </div>
                 </div>
                 </div>
+                <div class="nav-button-container">
+            <button class="nav-button nav-button-back" onclick="triggerShowPage('batchmates')"><< Back</button>
+            <button class="nav-button nav-button-next" onclick="triggerShowPage('education')">Next >></button>
         </div>
-        <div class="names-footer">
-            <div class="name-list-container">
-                <p>AGUILAR, STEPHEN NASH</p>
+        </div>
+        <footer class="names-footer">
+        <div class="name-list-container">
+            <p>AGUILAR, STEPHEN NASH</p>
             <p>AGUSTIN, JHON RUMSY</p>
             <p>ALMUETE, EDMAR</p>
             <p>BAL-UT, SHAWN MICHAEL</p>
@@ -901,9 +908,8 @@
             <p>TENGAY, SHIELA MAR</p>
             <p>UCOL, RAIAH CRISTA</p>
             <p>UMOTOY, MANUEL JUN</p>
-            </div>
         </div>
-        
+    </footer>
         <div class="nav-button-container">
             <button class="nav-button nav-button-back" onclick="triggerShowPage('family')"><< Back</button>
             <button class="nav-button nav-button-next" onclick="triggerShowPage('home')">Next >></button>
