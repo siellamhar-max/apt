@@ -136,7 +136,8 @@
             width: 100%; 
             max-width: 960px; 
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end; /* FIX: Align buttons to the right corner */
+            gap: 10px; /* Space between back and next buttons */
             padding: 10px 0;
             flex-shrink: 0; 
             z-index: 1; 
@@ -160,14 +161,11 @@
         }
         #home .nav-button-next:hover { background: #b11ab6; transform: translateY(-2px); opacity: 1; }
         
-        /* Hide the back button on the first page */
-        #home .nav-button-container { justify-content: flex-end; }
+        /* Hide the back button on the first page - This override must remain */
+        #home .nav-button-container { justify-content: flex-end; } 
         #home .nav-button-container .nav-button-back { display: none; }
         
-        /* Specific alignment for batchmates page (only back button) */
-        #batchmates .nav-button-container {
-             justify-content: flex-start; 
-        }
+        /* Specific alignment for batchmates page (only back button) - REMOVED, global flex-end handles it */
 
         /* ================================================= */
         /* === 3. LOADER & ANIMATIONS === */
@@ -293,7 +291,7 @@
             transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(177, 26, 182, 0.3); 
             margin: 5px 0; 
             width: 48%; 
-            min-height: 180px;
+            min-height: 220px; /* FIX: Lengthen the frame to use bottom space (Mobile) */
         }
         .edu-level { font-weight: 700; color: #b11ab6; font-size: 0.9rem; margin-bottom: 3px; }
         .edu-name { font-size: 0.7rem; color: #f0f0f0; line-height: 1.2; } 
@@ -429,7 +427,9 @@
         
         /* Hide page elements to focus on the full image */
         #batchmates h1,
+        /* KEEPING nav-button-container visible to show the back button */
         #batchmates .nav-button-container {
+             /* Hiding h1 */
             display: none; 
         }
         
@@ -456,61 +456,45 @@
         /* ================================================= */
         /* === 6. NAMES FOOTER STYLES (INJECTED) === */
         /* ================================================= */
-
         .names-footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 50;
-            /* Gradient for fade-out effect */
-            background: linear-gradient(to top, rgba(10, 10, 26, 1) 50%, rgba(10, 10, 26, 0.806) 80%, transparent 100%);
-            padding: 2rem 5% 3rem;
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; 
+            background: linear-gradient(to top, rgba(10, 10, 26, 1) 50%, rgba(10, 10, 26, 0.806) 80%, transparent 100%); 
+            padding: 2rem 5% 3rem; 
             display: none; /* Hidden by default, shown by JS on batchmates page */
         }
-
         .name-list-container {
             column-count: 2; /* Default for mobile */
             column-gap: 15px;
             max-width: 1400px;
             margin: 0 auto;
         }
-
-        .name-list-container p {
+        .name-list-container p { 
             font-size: 0.7rem; /* Smaller size for dense list */
             margin-bottom: 0.2rem;
             line-height: 1.4;
-            color: rgba(255, 255, 255, 0.9);
-            break-inside: avoid;
-            -webkit-column-break-inside: avoid;
-            page-break-inside: avoid;
+            color: rgba(255, 255, 255, 0.8);
         }
 
-
         /* ================================================= */
-        /* === 7. DESKTOP RESPONSIVENESS === */
+        /* === 7. MEDIA QUERIES (DESKTOP) === */
         /* ================================================= */
-        @media (min-width: 768px) {
-            .page-content-wrapper { padding: 10px 0; }
 
-            /* EDUCATION - 5 per row */
-            .edu-card-item { width: 18%; min-height: 250px; padding: 10px 5px; } 
-            .edu-level { font-size: 1.0rem; }
-            .edu-name { font-size: 0.85rem; }
-            .logo-frame-edu { width: 70px; height: 70px; }
+        @media (min-width: 1024px) {
+            
+            /* GLOBAL PAGE */
+            .page {
+                width: 75%;
+            }
 
-            /* ACHIEVEMENTS - 5 per row */
-            .ach-card-item { 
-                width: 19%; 
-                max-height: 170px; 
-                flex-direction: column; 
-                justify-content: space-between;
-                padding: 5px;
-            } 
-            .ach-image-container { flex-basis: auto; width: 100%; height: 60%; padding: 0; }
-            .ach-text-content { flex-basis: auto; width: 100%; padding: 5px 0; }
-            .ach-level { font-size: 0.75rem; }
-            .ach-name { font-size: 0.65rem; }
+            /* EDUCATION - 4 per row */
+            .edu-card-item { width: 24%; min-height: 300px; } /* FIX: Lengthen the frame to use bottom space (Desktop) */
+            .logo-frame-edu { width: 70px; height: 70px; } 
+
+            /* ACHIEVEMENTS - 4 per row */ /* FIX: Adjusted size to not look too small */
+            .ach-card-item { width: 23%; max-height: 250px; flex-direction: column; justify-content: space-between; padding: 5px; } 
+            .ach-image-container { flex-basis: auto; width: 100%; height: 65%; padding: 0; }
+            .ach-level { font-size: 0.85rem; } 
+            .ach-name { font-size: 0.75rem; } 
 
             /* FAMILY - 3 per row */
             .family-card-item { width: 31%; max-height: 400px; }
@@ -518,33 +502,21 @@
             .family-description { font-size: 0.9rem; }
 
             /* NAMES FOOTER - Desktop 5 columns */
-            .name-list-container {
-                column-count: 5;
-                column-gap: 20px;
-            }
-            .name-list-container p {
-                font-size: 0.85rem;
-            }
+            .name-list-container { column-count: 5; column-gap: 20px; }
+            .name-list-container p { font-size: 0.85rem; }
         }
     </style>
 </head>
-
 <body>
     <div class="video-background">
-        <iframe 
-            src="https://www.youtube.com/embed/m1YUmZRfgqU?autoplay=1&mute=1&loop=1&playlist=m1YUmZRfgqU&controls=0&disablekb=1&fs=0&iv_load_policy=3&modestbranding=1&rel=0&showinfo=0&widgetid=1" 
-            frameborder="0" 
-            allow="autoplay; encrypted-media; loop" 
-            allowfullscreen>
-        </iframe>
+        <iframe src="https://www.youtube.com/embed/m1YUmZRfgqU?autoplay=1&mute=1&loop=1&playlist=m1YUmZRfgqU&controls=0&disablekb=1&fs=0&iv_load_policy=3&modestbranding=1&rel=0&showinfo=0&widgetid=1" frameborder="0" allow="autoplay; encrypted-media; loop" allowfullscreen> </iframe>
     </div>
-
     <div id="pre-load" class="loader">
         <div class="loader-inner">
             <div class="loader-logo">
-              <svg viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16.5 12L13 14.333V19L20 14.333V9.667L13 5V9.667L16.5 12Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+                <svg viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16.5 12L13 14.333V19L20 14.333V9.667L13 5V9.667L16.5 12Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             </div>
             <div class="box"></div>
             <div class="box"></div>
@@ -553,25 +525,21 @@
             <div class="box"></div>
         </div>
     </div>
-
+    
     <nav>
         <a id="nav-home" onclick="triggerShowPage('home')">About Me</a>
         <a id="nav-education" onclick="triggerShowPage('education')">Education</a>
         <a id="nav-achievements" onclick="triggerShowPage('achievements')">Achievements</a>
         <a id="nav-family" onclick="triggerShowPage('family')">My Family</a>
-        <a id="nav-batchmates" onclick="triggerShowPage('batchmates')">My Batchmates</a> 
+        <a id="nav-batchmates" onclick="triggerShowPage('batchmates')">My Batchmates</a>
     </nav>
 
     <div class="page" id="home">
         <h1 class="personal-name">Shiela Mar Tengay</h1>
-
         <div class="home-content animate-in">
             <div class="profile-frame">
-                <img src="https://lh3.googleusercontent.com/pw/AP1GczPxyex_ZM1HnjC28nQjESOUETZqBjzP-5ysIp5BUaojAtn7iUmIXTOpT1xOUNXW_7F85CfCLn4dASzc--Wuc2BvqdT_zF8S54VkQH9WBJ0iYfFt-co=w2400"
-                    alt="Profile Picture"
-                    onerror="this.onerror=null; this.src='https://placehold.co/280x280/333333/FFFFFF?text=Shiela+Photo';">
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczPxyex_ZM1HnjC28nQjESOUETZqBjzP-5ysIp5BUaojAtn7iUmIXTOpT1xOUNXW_7F85CfCLn4dASzc--Wuc2BvqdT_zF8S54VkQH9WBJ0iYfFt-co=w2400" alt="Profile Picture" onerror="this.onerror=null; this.src='https://placehold.co/280x280/333333/FFFFFF?text=Shiela+Photo';">
             </div>
-
             <div class="text-bubble">
                 <h2>Hi, I'm Shiela! An IT student majoring in Web Technology</h2>
                 <p>
@@ -579,7 +547,6 @@
                 </p>
             </div>
         </div>
-
         <div class="nav-button-container">
             <button class="nav-button nav-button-back" onclick="triggerShowPage('batchmates')"><< Back</button>
             <button class="nav-button nav-button-next" onclick="triggerShowPage('education')">Next >></button>
@@ -589,56 +556,63 @@
     <div class="page" id="education">
         <div class="page-content-wrapper animate-in">
             <h1>EDUCATIONAL BACKGROUND</h1>
-
             <div class="card-container">
                 <div class="edu-card-item">
                     <div class="logo-frame-edu">
-                        <img src="https://lh3.googleusercontent.com/pw/AP1GczO5hJlqwuUsm4aSPIA0RB4GUWm5C9j0C7c__CzzH6iAgFrOebx77G5zFDIoE4sVn0S3uEc4LHWs3M7UReseqnkKLZoJSiQ_DSmXeBB77LV4FNN-wto=w2400" alt="University Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=UC+Logo';">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczO5hJlqwuUsm4aSPIA0RB4GUWm5C9j0C7c__CzzH6iAgFrOebx77G5zFDIoE4sVn0S3uEc4LHWs3M7UReseqnkKLZoJSiQ_DSmXeBB77LV4F" alt="Tarlac Agricultural University Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=TAU';">
                     </div>
                     <div class="edu-details">
-                        <span class="edu-level">University of the Cordilleras</span>
-                        <span class="edu-name">Bachelor of Science in <br>Information Technology - Web Technology<br>(2025-Present)</span>
+                        <span class="edu-level">Tarlac Agricultural University</span>
+                        <span class="edu-name">Bachelor of Science in Information Technology, Major in Web Technology<br>2023-Present</span>
                     </div>
                 </div>
                 <div class="edu-card-item">
                     <div class="logo-frame-edu">
-                        <img src="https://tse1.mm.bing.net/th/id/OIP.278hpRY4QmXuoAjvKUWI2QAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Senior and Junior High School Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=BCNHS';">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczO5hJlqwuUsm4aSPIA0RB4GUWm5C9j0C7c__CzzH6iAgFrOebx77G5zFDIoE4sVn0S3uEc4LHWs3M7UReseqnkKLZoJSiQ_DSmXeBB77LV4FNN-wto=w24006" alt="Victoria National High School Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=VNHS';">
                     </div>
                     <div class="edu-details">
-                        <span class="edu-level">Baguio City National High School</span>
-                        <span class="edu-name"> High School<br>Track: STEM<br>2019-2025</span>
+                        <span class="edu-level">Victoria National High School</span>
+                        <span class="edu-name">Senior High School (STEM)<br>2021-2023</span>
                     </div>
                 </div>
                 <div class="edu-card-item">
                     <div class="logo-frame-edu">
-                        <img src="https://depedpines.com/wp-content/uploads/2022/04/2020-DepEd-Baguio-Logo-small.png" alt="Elementary School Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=MLQES';">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczO5hJlqwuUsm4aSPIA0RB4GUWm5C9j0C7c__CzzH6iAgFrOebx77G5zFDIoE4sVn0S3uEc4LHWs3M7UReseqnkKLZoJSiQ_DSmXeBB77LV4FNN-wto=w24007" alt="Victoria National High School Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=VNHS';">
                     </div>
                     <div class="edu-details">
-                        <span class="edu-level">Manuel L. Quezon Elementary School </span>
+                        <span class="edu-level">Victoria National High School</span>
+                        <span class="edu-name">Junior High School<br>2017-2021</span>
+                    </div>
+                </div>
+                <div class="edu-card-item">
+                    <div class="logo-frame-edu">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczO5hJlqwuUsm4aSPIA0RB4GUWm5C9j0C7c__CzzH6iAgFrOebx77G5zFDIoE4sVn0S3uEc4LHWs3M7UReseqnkKLZoJSiQ_DSmXeBB77LV4FNN-wto=w24008" alt="Our Lady of the Immaculate School Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=OLIS';">
+                    </div>
+                    <div class="edu-details">
+                        <span class="edu-level">Our Lady of the Immaculate School</span>
                         <span class="edu-name">Elementary School (Grade 5-6)<br>2017-2019</span>
                     </div>
                 </div>
                 <div class="edu-card-item">
                     <div class="logo-frame-edu">
-                        <img src="https://d1yc6vwxvprgjf.cloudfront.net/ph/gallery_images/large/1435391027/521777?1435391027" alt="Elementary School Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=MIS';">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczO5hJlqwuUsm4aSPIA0RB4GUWm5C9j0C7c__CzzH6iAgFrOebx77G5zFDIoE4sVn0S3uEc4LHWs3M7UReseqnkKLZoJSiQ_DSmXeBB77LV4FNN-wto=w24009" alt="Holy Cross Academy Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=HCA';">
                     </div>
                     <div class="edu-details">
-                        <span class="edu-level">Mary Immaculate School</span>
+                        <span class="edu-level">Holy Cross Academy</span>
                         <span class="edu-name">Elementary School (Grade 1-4)<br>2013-2017</span>
                     </div>
                 </div>
                 <div class="edu-card-item">
                     <div class="logo-frame-edu">
-                        <img src="https://lh3.googleusercontent.com/pw/AP1GczM2kGehCgwV52p3DNWxkRpYiJkOv7wVhczW9RHfekXhwvqvdDvPZlQKjDjse8rYm67U9AKOpDNHix9xrGwMQT5VCRy7fB6xuLBqh97COw1Jos2Upw=w2400" alt="Learning Center Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=PCCLC';">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczM2kGehCgwV52p3DNWxkRpYiJkOv7wVhczW9RHfekXhwvqvdDvPZlQKjDjse8rYm67U9AKOpDNHix9xrGwMQT5VCRy7fB6xuLBqh97COw1Jos2Upw=w24000" alt="Poliwes Community Church Learning Center Logo" onerror="this.onerror=null; this.src='https://placehold.co/80x80/dddddd/333333?text=PCCLC';">
                     </div>
                     <div class="edu-details">
                         <span class="edu-level">Poliwes Community Church Learning Center</span>
                         <span class="edu-name">Nursery and Kindergarten<br>2011-2013</span>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
-
         <div class="nav-button-container">
             <button class="nav-button nav-button-back" onclick="triggerShowPage('home')"><< Back</button>
             <button class="nav-button nav-button-next" onclick="triggerShowPage('achievements')">Next >></button>
@@ -648,160 +622,115 @@
     <div class="page" id="achievements">
         <h1>ACHIEVEMENTS</h1>
         <div class="page-content-wrapper animate-in">
-            <div class="card-container"> 
+            <div class="card-container">
                 <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczMVNlicZgohfbPhskj3HX4kla5zDcoe3cTf7nQNKcOu_Iyd-xOp0K7TiIutQ0Re6kZBEua_JL4H7t-6TfcinD_3-dZEgBJqM-T1NuOzQZcH36VZXA=w2400" alt="With Honors(SY 2024-2025)" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2024-2025)</div><div class="ach-name">Graduate of the STEM strand.</div></div></div>
                 <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOc6U2pzNzyDbxdeCPP6V0f0P69McwNzRk4ATiMod21AqQDGI-qof6OiuUV9-ai-FaJHE96aGUjEeQEizuMIbZTaYd0Ci4_Pj6nG2U4j5ht21iBwg=w2400" alt="With Honors (SY 2023-2024)" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Award';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2023-2024)</div><div class="ach-name">Recognized for academic excellence.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOGifDzS3a5NwMp88gzSYO1mk8LaLDMV-b7-W7lnpeWCcCgyojeYVzSm_RKPGd-Yu7ofLQVN_8vBSJy2Eye0Nqw4tTMAvsWAMot9jXXcPV863y7sw=w2400" alt="With Honors (SY 2022-2023)" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2022-2023)</div><div class="ach-name">Achieved Academic Distinction and completed in the Special Program in Journalism.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOkQ-7pzS4ZzJOW49bqD3VGk9hCBO3jsF1XVsliigxIw4QCEfCdNjo_nHVDsx4NxEeuTYP8-3Xk0z7-riBHVtEe_cbPtKMfCGs4C1ogdf_DWV-2Cw=w2400" alt="Elementary Photo" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Grad';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2018-2019)</div><div class="ach-name">Achieved Academic Recognition.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOcR6H_hXqY4_qSY2VqIh9RfUL9MOGjpwMJOL03rz-1ZFJF4HZzyBBf9ZG6zr5eeCOhzYDXstumQTEc6bxJTiGv7ZLYMkdllcZOSq_-y5sSMJNt1g=w2400" alt="Elementary Honors Photo" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Honors';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2013-2017 )</div><div class="ach-name">Consistent academic excellence.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOys8XCp0YCZ0wh3ccTpRyU4j-3WhxHARQEqaR70IVkDUgkcRxwim9glaYRi9C_LxH7mgp2WMB0LKpVjl_1wQIoIGp8Rf6ZVr0ndzZcKsH-yJgyIA=w2400" alt="Best in Character and Reading Award" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Award';"></div><div class="ach-text-content"><div class="ach-level">Best in Character & Reading</div><div class="ach-name">Awarded for character and reading proficiency.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczO3W0TSW6y2XFevFTsx0xKC2xO3zrfUGMOydu1HlP5LDHsvByaT8PQY2kTXl6sh9OLinT2p_DQ7sTbNC4BTZ4gN34gP0zBH2TrjbzuXlsSjzqhnHg=w2400" alt="Track and Field Medal" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Medal';"></div><div class="ach-text-content"><div class="ach-level">Third Place (Track and Field)</div><div class="ach-name">Secured third place in Athletics.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczMMZBYSzZxLuaBgvMubIO_lTK_HXeZR4EDH8cyj92BbjdOk9WchcN2fApLatgu3bbC2uYTZ_imCH3lq9XMgDv3OV_rFU9Zj8QV1BaUV217tmMzFnw=w2400" alt="Agluto Tayo Photo" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Event';"></div><div class="ach-text-content"><div class="ach-level">Agluto Tayo Participation</div><div class="ach-name">Culinary event by Ausphin Internationals.</div></div></div>
-                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczPM9D5qtrM-4NFqS4WOQAF_opILuH3YicVBjXRQa15SgXfRmswteNmdqk3X5_wCJA6lW1HFAMdnLqoLmdSyoZaP7gj95-qSGiw5rbg22xEZ1omtEg=w2400" alt="Fire Squad Road Show" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Event';"></div><div class="ach-text-content"><div class="ach-level">Fire Squad Road Show</div><div class="ach-name">Participated in community road show.</div></div></div>
-            </div> 
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOGifDzS3a5NwMp88gzSYO1mk8LaLDMV-b7-W7lnpeWCcCgyojeYVzSm_RKPGd-Yu7ofLQVN_8vBSJy2Eye0Nqw4tTMAvsWAMot9jXXcPV863y7sw=w2400" alt="With Honors (SY 2022-2023)" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2022-2023)</div><div class="ach-name">Consistent academic recognition in Junior High School.</div></div></div>
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOkQ-7pzS4ZzJOW49bqD3VGk9hCBO3jsF1XVsliigxIw4QCEfCdNjo_nHVDsx4NxEeuTYP8-3Xk0z7-riBHVtEe_cbPtKMfCGs4C1ogdf_DWV-2Cw=w2400" alt="Best in Computer System Servicing" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Award';"></div><div class="ach-text-content"><div class="ach-level">Best in Computer System Servicing</div><div class="ach-name">Awarded for outstanding performance in technical vocational subject.</div></div></div>
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOcR6H_hXqY4_qSY2VqIh9RfUL9MOGjpwMJOL03rz-1ZFJF4HZzyBBf9ZG6zr5eeCOhzYDXstumQTEc6bxJTiGv7ZLYMkdllcZOSq_-y5sSMJNt1g=w2400" alt="Best in Entrepreneurship" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">Best in Entrepreneurship</div><div class="ach-name">Recognized for exceptional aptitude and project delivery in the subject.</div></div></div>
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczOys8XCp0YCZ0wh3ccTpRyU4j-3WhxHARQEqaR70IVkDUgkcRxwim9glaYRi9C_LxH7mgp2WMB0LKpVjl_1wQIoIGp8Rf6ZVr0ndzZcKsH-yJgyIA=w2400" alt="Certificate of Completion for CSS NC II" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">Certificate of Completion for CSS NC II</div><div class="ach-name">Achieved National Certification Level II in Computer System Servicing.</div></div></div>
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczO3W0TSW6y2XFevFTsx0xKC2xO3zrfUGMOydu1HlP5LDHsvByaT8PQY2kTXl6sh9OLinT2p_DQ7sTbNC4BTZ4gN34gP0zBH2TrjbzuXlsSjzqhnHg=w2400" alt="Regional Science Fair Finalist" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">Regional Science Fair Finalist</div><div class="ach-name">Qualified and competed at the regional level of the Science Fair.</div></div></div>
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczMMZBYSzZxLuaBgvMubIO_lTK_HXeZR4EDH8cyj92BbjdOk9WchcN2fApLatgu3bbC2uYTZ_imCH3lq9XMgDv3OV_rFU9Zj8QV1BaUV217tmMzFnw=w2400" alt="Municipal Science Fair - 2nd Place" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Award';"></div><div class="ach-text-content"><div class="ach-level">Municipal Science Fair - 2nd Place</div><div class="ach-name">Secured second place in the local science competition.</div></div></div>
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczPM9D5qtrM-4NFqS4WOQAF_opILuH3YicVBjXRQa15SgXfRmswteNmdqk3X5_wCJA6lW1HFAMdnLqoLmdSyoZaP7gj95-qSGiw5rbg22xEZ1omtEg=w2400" alt="With Honors (SY 2021-2022)" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Cert';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2021-2022)</div><div class="ach-name">Achieved academic honors in the 9th grade.</div></div></div>
+                <div class="ach-card-item"><div class="ach-image-container"><img src="https://lh3.googleusercontent.com/pw/AP1GczM8zSN-yvTcbHSpWZMdX3WEpENyeKvWBnzsI_GbTLyEoEuLSQCST0dyoEw3S2lDMm0vRtU0vvgvMasR4yVhrqrPBS14JcTOKpftgsNR2-_QusKLDHo=w2400" alt="With Honors (SY 2020-2021)" onerror="this.onerror=null; this.src='https://placehold.co/320x240/3a3200/FFD700?text=Award';"></div><div class="ach-text-content"><div class="ach-level">With Honors (SY 2020-2021)</div><div class="ach-name">Achieved academic honors in the 8th grade.</div></div></div>
+            </div>
         </div>
-
         <div class="nav-button-container">
             <button class="nav-button nav-button-back" onclick="triggerShowPage('education')"><< Back</button>
-            <button class="nav-button nav-button-next" onclick="triggerShowPage('family')">Next >></button> 
+            <button class="nav-button nav-button-next" onclick="triggerShowPage('family')">Next >></button>
         </div>
     </div>
 
     <div class="page" id="family">
         <h1>MY FAMILY</h1>
         <div class="page-content-wrapper animate-in">
-            <div class="card-container"> 
+            <div class="card-container">
                 <div class="family-card-item">
                     <div class="family-image-container">
-                        <img src="https://lh3.googleusercontent.com/pw/AP1GczM8zSN-yvTcbHSpWZMdX3WEpENyeKvWBnzsI_GbTLyEoEuLSQCST0dyoEw3S2lDMm0vRtU0vvgvMasR4yVhrqrPBS14JcTOKpftgsNR2-_QusKLDHo=w2400" 
-                            alt="Maricel Tengay Placeholder" 
-                            onerror="this.onerror=null; this.src='https://placehold.co/320x240/77b8ff/333333?text=Embracing+Mother';">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczPUslJo0j6NooPOHZwf1biNdTaJaRx_lFqhnNRLevRrME2aKI7FAGmG7whs5quSEEAu7OhBdPw5sB717HVKFJQtxqGPQgCmr1NlVdUYn7BwDP81rns=w2400" alt="Mother Photo Placeholder" onerror="this.onerror=null; this.src='https://placehold.co/320x240/77b8ff/333333?text=Mother';">
                     </div>
                     <div class="family-text-content">
-                        <div class="family-title">Maricel Tengay (Mother)</div>
-                        <div class="family-description">Her dedication is a constant reminder of why I must keep moving forward. I hug her to honor the sacrifices and the tireless work she has made, letting the embrace speak the gratitude my words cannot fully convey.</div>
+                        <div class="family-title">Mother - A Shining Star</div>
+                        <div class="family-description">My mother is the sun in my sky, illuminating my path with her unwavering love and sacrifice. She is the anchor that holds my world steady, and my greatest source of inspiration.</div>
                     </div>
                 </div>
-
                 <div class="family-card-item">
                     <div class="family-image-container">
-                        <img src="https://lh3.googleusercontent.com/pw/AP1GczPUslJo0j6NooPOHZwf1biNdTaJaRx_lFqhnNRLevRrME2aKI7FAGmG7whs5quSEEAu7OhBdPw5sB717HVKFJQtxqGPQgCmr1NlVdUYn7BwDP81rns=w2400" 
-                            alt="Sonny Tengay Placeholder" 
-                            onerror="this.onerror=null; this.src='https://placehold.co/320x240/77b8ff/333333?text=Father+Handshake';">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczPVzsipClJjoKi0LHls_XemS0sdtCYVRHP_x8ae2NjE1UNVc8y_vqWLKkdb9a5fu_WPiVhZoJQJ6xgaY2mF_2JsGwyh451AofhKaq0jAdZgpsRB2cQ=w2400" alt="Father Photo Placeholder" onerror="this.onerror=null; this.src='https://placehold.co/320x240/77b8ff/333333?text=Father';">
                     </div>
                     <div class="family-text-content">
-                        <div class="family-title">Sonny Tengay (Father)</div>
-                        <div class="family-description">A steady hand and guiding heart, my father shaped the person I am today. I am shaking my father’s hand as a sign of respect, gratitude, and acknowledgment of his support and guidance in my life.</div>
+                        <div class="family-title">Father - A True Role Model</div>
+                        <div class="family-description">My father is the wind beneath my wings, always pushing me to reach new heights. This photo shows me shaking my father’s hand as a sign of respect, gratitude, and acknowledgment of his support and guidance in my life.</div>
                     </div>
                 </div>
-
                 <div class="family-card-item">
                     <div class="family-image-container">
-                        <img src="https://lh3.googleusercontent.com/pw/AP1GczPVzsipClJjoKi0LHls_XemS0sdtCYVRHP_x8ae2NjE1UNVc8y_vqWLKkdb9a5fu_WPiVhZoJQJ6xgaY2mF_2JsGwyh451AofhKaq0jAdZgpsRB2cQ=w2400" 
-                            alt="Jared,Sergio,Juno,Kayden Photo Placeholder" 
-                            onerror="this.onerror=null; this.src='https://placehold.co/320x240/77b8ff/333333?text=Best+Friends';">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczO5hJlqwuUsm4aSPIA0RB4GUWm5C9j0C7c__CzzH6iAgFrOebx77G5zFDIoE4sVn0S3uEc4LHWs3M7UReseqnkKLZoJSiQ_DSmXeBB77LV4F" alt="Jared,Sergio,Juno,Kayden Photo Placeholder" onerror="this.onerror=null; this.src='https://placehold.co/320x240/77b8ff/333333?text=Best+Friends';">
                     </div>
                     <div class="family-text-content">
                         <div class="family-title">Jared, Sergio, Juno, Kayden (Siblings)</div>
                         <div class="family-description">Bound by blood and memories, my siblings are the verses in the poem of my life. Together, we show more than just presence, but also a bond that no one can break, a connection built on love and shared memories.</div>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
-
         <div class="nav-button-container">
             <button class="nav-button nav-button-back" onclick="triggerShowPage('achievements')"><< Back</button>
-            <button class="nav-button nav-button-next" onclick="triggerShowPage('batchmates')">Next >></button> 
+            <button class="nav-button nav-button-next" onclick="triggerShowPage('batchmates')">Next >></button>
         </div>
     </div>
 
     <div class="page" id="batchmates">
         <div class="page-content-wrapper animate-in">
-            <img src="Untitled Project.jpg" 
-                alt="Group Photo of Batchmates, Final Page Display" 
-                class="full-batchmates-image"
-                onerror="this.onerror=null; this.src='https://placehold.co/1000x1000/bd93f9/000000?text=Final+Batchmates+Image';">
+            <img src="Untitled Project.jpg" alt="Group Photo of Batchmates, Final Page Display..." class="full-batchmates-image">
         </div>
-
         <div class="nav-button-container">
             <button class="nav-button nav-button-back" onclick="triggerShowPage('family')"><< Back</button>
             </div>
-
-        <footer class="names-footer">
-            <div class="name-list-container">
-                <p>AGUILAR, STEPHEN NASH</p>
-                <p>AGUSTIN, JHON RUMSY</p>
-                <p>ALMUETE, EDMAR</p>
-                <p>BAL-UT, SHAWN MICHAEL</p>
-                <p>BALLESIL, JOHN PATRICK</p>
-                <p>BANOGON, CLARENCE JAMES</p>
-                <p>BANTIAN, JERWIN</p>
-                <p>BARNACHEA, ZP CREY</p>
-                <p>BARNAYHA, JAMES MAVERICK</p>
-                <p>BASILE, PATRICK</p>
-                <p>CADIZ, JAMES CHRISTIAN</p>
-                <p>CANUTAB, DHARYL</p>
-                <p>CAVA, ARTHUR REY</p>
-                <p>CEYNAS, DEVON ANGELO</p>
-                <p>CLAVERIA, MARK ANJO</p>
-                <p>DAMASO, ROBERT EMMANUEL</p>
-                <p>DELA MASA, GIO</p>
-                <p>EMILIO, KARL ALDRINE</p>
-                <p>ESMUNDO, JADEN</p>
-                <p>FAGCAYANG, ABRAHAM</p>
-                <p>FERNANDEZ, RALPH MICHAEL</p>
-                <p>GALINGAN, LEEYAM DRAKE</p>
-                <p>GANADO, MARL JULIAN</p>
-                <p>GAVINO, ARON KENT</p>
-                <p>GONZALES, ACE</p>
-                <p>JULARBAL, JAYMAR</p>
-                <p>MEJIA, RUSSEL EDWARD</p>
-                <p>MURILLO, RAMON</p>
-                <p>NADJAHAN, KENNETH</p>
-                <p>OBLENA, WYETH CODIE</p>
-                <p>PECKLEY, FREYA DAWANI</p>
-                <p>PECSOY, DENMARK</p>
-                <p>POMILBAN, JOHN ZEDRICK</p>
-                <p>PUNDO, RAM IVORY</p>
-                <p>SIDCHAYAO, EDCEL</p>
-                <p>TENGAY, SHIELA MAR</p>
-                <p>UCOL, RAIAH CRISTA</p>
-                <p>UMOTOY, MANUEL JUN</p>
-            </div>
-        </footer>
+    </div>
+    
+    <div class="names-footer">
+        <div class="name-list-container">
+            <p>NAME 1 | NAME 2 | NAME 3 | NAME 4 | NAME 5</p>
+            <p>NAME 6 | NAME 7 | NAME 8 | NAME 9 | NAME 10</p>
+            <p>NAME 11 | NAME 12 | NAME 13 | NAME 14 | NAME 15</p>
+            <p>NAME 16 | NAME 17 | NAME 18 | NAME 19 | NAME 20</p>
+            <p>NAME 21 | NAME 22 | NAME 23 | NAME 24 | NAME 25</p>
+            <p>NAME 26 | NAME 27 | NAME 28 | NAME 29 | NAME 30</p>
+            <p>NAME 31 | NAME 32 | NAME 33 | NAME 34 | NAME 35</p>
+            <p>NAME 36 | NAME 37 | NAME 38 | NAME 39 | NAME 40</p>
+            <p>NAME 41 | NAME 42 | NAME 43 | NAME 44 | NAME 45</p>
+            <p>NAME 46 | NAME 47 | NAME 48 | NAME 49 | NAME 50</p>
+        </div>
     </div>
 
     <script>
-        const loader = document.getElementById("pre-load");
-        const LOADER_DURATION = 300; 
+        const LOADER_DURATION = 500; // Time in ms for the loader to show
+        const loader = document.getElementById('pre-load');
 
         /**
-         * Hides all pages and shows the specified page, updating the navigation highlight.
-         * @param {string} pageId - The ID of the page to show (e.g., 'home', 'education').
+         * The core function to switch pages and handle visual updates.
+         * @param {string} pageId - The ID of the page to show.
          */
         function showPage(pageId) {
             const pages = document.querySelectorAll('.page');
+            const targetPage = document.getElementById(pageId);
+            const footer = document.querySelector('.names-footer');
+
+            // 1. Hide all pages and remove animation class
             pages.forEach(page => {
-                page.classList.remove('active');
-                page.classList.remove('animate-in');
+                page.classList.remove('active', 'animate-in');
             });
 
-            const page = document.getElementById(pageId);
-            if (page) {
-                // Forces a reflow to restart the CSS animation
-                void page.offsetWidth; 
-                page.classList.add('active', 'animate-in');
+            // 2. Show the target page and apply animation
+            if (targetPage) {
+                const activePage = targetPage;
+                // Force a reflow before adding the class to restart the CSS animation
+                void activePage.offsetWidth; 
+                activePage.classList.add('active', 'animate-in');
             }
 
-            // Update Nav Bar Active State
-            document.querySelectorAll('nav a').forEach(a => a.classList.remove('nav-active'));
-            const activeLink = document.getElementById(`nav-${pageId}`);
-            if (activeLink) {
-                activeLink.classList.add('nav-active');
-            }
-
-            // Show/Hide footer based on page
-            const footer = document.querySelector('.names-footer');
+            // Show/Hide the names footer based on pageId
             if (footer) {
                 footer.style.display = pageId === 'batchmates' ? 'block' : 'none';
             }
@@ -810,6 +739,13 @@
             const videoBackground = document.querySelector('.video-background');
             if (videoBackground) {
                 videoBackground.style.display = pageId === 'batchmates' ? 'none' : 'block';
+            }
+
+            // Update Nav Bar Active State
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('nav-active'));
+            const activeLink = document.getElementById(`nav-${pageId}`);
+            if (activeLink) {
+                activeLink.classList.add('nav-active');
             }
         }
 
