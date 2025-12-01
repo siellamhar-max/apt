@@ -916,11 +916,12 @@
     </div>
 
     <script>
-        // Define ALL required constants and global state variables
         const pages = ['home', 'education', 'achievements', 'family', 'batchmates'];
         let currentPageIndex = 0;
+        
+        // Add necessary global variables for the portfolio functionality
         const LOADER_DURATION = 300; 
-        const loader = document.getElementById('pre-load'); 
+        const loader = document.getElementById('pre-load');
 
         function updateNavActive() {
             const pageId = pages[currentPageIndex];
@@ -934,96 +935,56 @@
         }
 
         /**
-         * Core page activation logic (FIXED: Handles footer and video visibility).
-         * @param {string} pageId - The ID of the page to show.
+         * FIXED: This function now correctly controls the footer and video background visibility.
          */
-        function showPage(pageId) {
+        function triggerShowPage(pageId) {
             const newIndex = pages.indexOf(pageId);
             if (newIndex === -1) return; 
-
-            // Get elements for the names footer and video background
+            
             const footer = document.querySelector('.names-footer');
             const videoBackground = document.querySelector('.video-background');
 
-            // 1. Remove 'active' and 'animate-in' from ALL pages
+            // 1. Hide all pages and remove animation class
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active', 'animate-in'); 
             });
             
-            // 2. Show the target page
+            // 2. Show the target page and apply animation
             const newPage = document.getElementById(pageId);
             if (newPage) {
-                // Trigger reflow and add animation class
+                // Trigger reflow for CSS animation
                 void newPage.offsetWidth; 
                 newPage.classList.add('active', 'animate-in');
             }
-
-            // 3. CRITICAL FIX: Control the names footer (Show ONLY on batchmates page)
+            
+            // 3. FIX: Control the names footer (Show ONLY on batchmates page)
             if (footer) {
                 footer.style.display = pageId === 'batchmates' ? 'block' : 'none';
             }
 
-            // 4. CRITICAL FIX: Control the video background (Hide ONLY on batchmates page)
+            // 4. FIX: Control the video background (Hide ONLY on batchmates page)
             if (videoBackground) {
                 videoBackground.style.display = pageId === 'batchmates' ? 'none' : 'block';
             }
             
-            // 5. Update state and navigation
             currentPageIndex = newIndex;
             updateNavActive();
         }
 
-        /**
-         * Triggers the page switch sequence with a loader transition.
-         */
-        function triggerShowPage(pageId) {
-            if (pages.indexOf(pageId) === -1 || !loader) {
-                showPage(pageId);
-                return;
-            }
-
-            // 1. Show the loader for the transition
-            loader.classList.add('show');
-            loader.classList.remove('hide');
-
-            // 2. Schedule the page switch and loader hide
+        // Loader logic (remains the same)
+        window.addEventListener('load', () => {
+            const preLoad = document.getElementById('pre-load');
             setTimeout(() => {
-                showPage(pageId);
-                loader.classList.remove('show');
-                loader.classList.add('hide');
-            }, LOADER_DURATION);
-        }
+                preLoad.classList.add('hide');
+            }, 500); // 0.5s fade out
+        });
         
-        /**
-         * Function to handle 'Next' and 'Back' buttons (if used).
-         */
-        function navigatePage(direction) {
-            let newIndex = currentPageIndex + direction;
-
-            // Loop pages
-            if (newIndex < 0) {
-                newIndex = pages.length - 1;
-            } else if (newIndex >= pages.length) {
-                newIndex = 0;
-            }
-
-            triggerShowPage(pages[newIndex]);
-        }
-
         // Initial setup
         document.addEventListener('DOMContentLoaded', () => {
-             // Set the initial page (home) and apply all visibility rules
-             showPage('home'); 
-             
-             // Hide the pre-loader element after the initial load delay
-             const preLoad = document.getElementById('pre-load');
-             if (preLoad) {
-                 setTimeout(() => {
-                     preLoad.classList.add('hide');
-                     preLoad.classList.remove('show');
-                 }, 500); 
-             }
+             // Use triggerShowPage to initialize the 'home' page and set all elements correctly
+             triggerShowPage('home');
         });
     </script>
 </body>
 </html>
+
